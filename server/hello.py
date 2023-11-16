@@ -2,8 +2,6 @@
 from flask import Flask
 import datetime
 
-x = datetime.datetime.now()
-
 # Initializing flask app
 app = Flask(__name__)
 
@@ -16,7 +14,7 @@ def get_time():
 	return {
 		'Name':"geek", 
 		"Age":"22",
-		"Date":x, 
+		"Date":datetime.datetime.now(), 
 		"programming":"python"
 		}
 
