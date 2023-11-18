@@ -16,6 +16,8 @@ RUN apt-get install -y meson
 RUN apt-get install -y ninja-build
 
 RUN apt-get install -y g++
+RUN apt-get install -y cmake
+RUN apt-get install -y pkg-config
 
 RUN dpkg -i crow-v1.0+5.deb
 

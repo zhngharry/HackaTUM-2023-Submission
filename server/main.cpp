@@ -1,5 +1,6 @@
-#include "src/api/routes.h"
+#include "src/api/api.h"
 
-int main() {
-    api::start_api();
+int main(void)
+{
+    api::Api {};
 }

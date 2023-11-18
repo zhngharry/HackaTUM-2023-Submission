@@ -9,7 +9,11 @@ project('hackatum-backend', 'cpp',
 src_files = [ 'main.cpp' ]
 subdir('src')
 
-dependencies = []
+dependencies = [
+  dependency('redis++')
+]
+
+
 
 target = executable(
   meson.project_name(),
