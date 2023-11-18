@@ -3,20 +3,40 @@
 import React from "react";
 
 import "../styles/styles.scss";
-import { Button } from "antd";
+import { Button, Layout, Typography } from "antd";
+
+const { Content, Header, Sider } = Layout;
 
 interface ServiceListPageProps {
-  stepBack: () => void;
+  stepBack: (postCode: string) => void;
+  postCode: string;
 }
 
-const ServiceListPage: React.FC<ServiceListPageProps> = ({ stepBack }) => {
+const ServiceListPage: React.FC<ServiceListPageProps> = ({
+  stepBack,
+  postCode,
+}) => {
   const handleBackClick = () => {
-    stepBack();
+    stepBack(postCode);
   };
 
   return (
     <div className="custom-view">
-      <Button onClick={handleBackClick} />
+      <Layout>
+        <Header>
+          <Button onClick={handleBackClick}>Back</Button>
+          <Typography.Title level={1} style={{ marginBottom: "30px" }}>
+            Displaying results for Postcode {postCode}
+          </Typography.Title>
+            <Typography.Title level={3} italic style={{ marginBottom: "30px" }}>
+                Found x results in n seconds
+            </Typography.Title>
+        </Header>
+
+        <Content>
+            List of results
+        </Content>
+      </Layout>
     </div>
   );
 };

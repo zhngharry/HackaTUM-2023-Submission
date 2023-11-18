@@ -16,30 +16,30 @@ import PostCodePage from "../../components/PostCodePage";
 import ServiceListPage from "../../components/ServiceListPage";
 
 const { Content, Header } = Layout;
-const stepItems = [
-  {
-    title: "Enter your postcode",
-    status: "in progress",
-    icon: <EnvironmentOutlined />,
-  },
-  {
-    title: "Choose your service",
-    status: "wait",
-    icon: <SolutionOutlined />,
-  },
-  {
-    title: "Done!",
-    status: "wait",
-    icon: <CheckCircleOutlined />,
-  },
-];
-
-// ... (other imports)
 
 const SearchPage = () => {
+  const stepItems = [
+    {
+      title: "Enter your postcode",
+      status: "in progress",
+      icon: <EnvironmentOutlined />,
+    },
+    {
+      title: "Choose your service",
+      status: "wait",
+      icon: <SolutionOutlined />,
+    },
+    {
+      title: "Done!",
+      status: "wait",
+      icon: <CheckCircleOutlined />,
+    },
+  ];
+
   const [currentStep, setCurrentStep] = useState(0);
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [selectedPostCode, setSelectedPostCode] = useState("");
 
   const showUpdateModal = () => {
     setUpdateModalVisible(true);
@@ -54,33 +54,43 @@ const SearchPage = () => {
     stepItems[0].status = "finish";
     stepItems[0].icon = <CheckCircleOutlined />;
     stepItems[1].status = "in progress";
+    setSelectedPostCode(postcode);
   };
 
-  const handleBackClick = () => {
+  const handleBackClick = (postCode: string) => {
     setCurrentStep(0);
     stepItems[0].status = "in progress";
     stepItems[0].icon = <EnvironmentOutlined />;
     stepItems[1].status = "wait";
+    setSelectedPostCode(postCode);
   };
 
   return (
     <ConfigProvider theme={theme}>
       <div className="main-layout">
-        <FloatButton
-          icon={<EditOutlined />}
-          type="primary"
-          onClick={showUpdateModal}
-          style={{ height: "75px", width: "75px" }}
-        />
+        {currentStep === 0 ? (
+          <FloatButton
+            icon={<EditOutlined />}
+            type="primary"
+            onClick={showUpdateModal}
+            style={{ height: "75px", width: "75px" }}
+          />
+        ) : null}
         <Layout className="sub-layout">
           <Header className="page-header">
             <Steps className="steps" items={stepItems} current={currentStep} />
           </Header>
           <Content className="content">
             {currentStep === 0 ? (
-              <PostCodePage onSearch={handleSearch} />
+              <PostCodePage
+                onSearch={handleSearch}
+                postCode={selectedPostCode}
+              />
             ) : currentStep === 1 ? (
-              <ServiceListPage stepBack={handleBackClick} />
+              <ServiceListPage
+                stepBack={() => handleBackClick(selectedPostCode)}
+                postCode={selectedPostCode}
+              />
             ) : null}
           </Content>
         </Layout>

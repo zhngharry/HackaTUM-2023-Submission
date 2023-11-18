@@ -9,10 +9,11 @@ import "../styles/styles.scss";
 
 interface PostCodePageProps {
   onSearch: (postcode: string) => void;
+  postCode: string;
 }
 
-const PostCodePage: React.FC<PostCodePageProps> = ({ onSearch }) => {
-  const [postcode, setPostcode] = useState("");
+const PostCodePage: React.FC<PostCodePageProps> = ({ onSearch, postCode }) => {
+  const [postcode, setPostcode] = useState(postCode);
 
   const handlePostcodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (
@@ -31,7 +32,7 @@ const PostCodePage: React.FC<PostCodePageProps> = ({ onSearch }) => {
 
   return (
     <div className="custom-view">
-      <Typography.Title level={1} style={{ marginBottom: "30px" }}>
+      <Typography.Title level={1}>
         Enter your Postcode
       </Typography.Title>
       <Space.Compact style={{ width: "70%" }}>
