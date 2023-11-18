@@ -1,8 +1,6 @@
-#include "src/database/db.h"
+#include "src/api/api.h"
 
-
-int main(void){
-    database::Database db{};
-    std::string plz = "99817";
-    db.get_ranking(plz);
+int main(void)
+{
+    api::Api {};
 }

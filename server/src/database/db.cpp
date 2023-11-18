@@ -1,21 +1,30 @@
 #include "db.h"
-#include <iostream>
 #include <string>
 #include <sw/redis++/redis.h>
 
 namespace database {
 
-
-std::vector<std::string> Database::get_ranking(std::string& plz, std::size_t amount)
+Database::Database()
+    : m_redis { "tcp://127.0.0.1" }
 {
-    auto redis = sw::redis::Redis("tcp://127.0.0.1");
-    std::unordered_set<std::string> set{};
-    redis.smembers(plz, std::inserter(set, set.begin()));
-    std::vector<std::string> result{};
-    for (auto it=set.begin(); it != set.end(); ++it){
-        result.push_back(*it);
-    }
-       return result;
-}
 }
 
+std::vector<std::pair<std::string, double>> Database::get_precomputed_ranking(std::string plz)
+{
+    // TODO
+    return {};
+}
+
+std::vector<std::string> Database::get_neighbours(std::string& plz)
+{
+    std::vector<std::string> neighbours {};
+    m_redis.smembers(plz, std::inserter(neighbours, neighbours.begin()));
+    return neighbours;
+}
+
+crow::json::wvalue Database::service_provider_ret_val(std::string& id, double rankval)
+{
+    // TODO
+    return {};
+}
+}
