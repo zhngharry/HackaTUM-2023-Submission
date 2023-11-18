@@ -7,6 +7,7 @@
 
 namespace database {
 
+
 struct ServiceProvider {
     ServiceProvider(
         std::size_t id,
@@ -49,13 +50,10 @@ struct ServiceProvider {
 
 class Database {
 public:
-    Database();
 
-    std::vector<ServiceProvider> get_ranking(std::string& plz, std::size_t amount = 20);
+    std::vector<size_t> get_ranking(std::string& plz, std::size_t amount = 20);
 
-    ~Database();
 private:
-    redisContext* m_c;
     std::vector<std::string> get_neighbours(std::string& plz);
 };
 }
