@@ -51,7 +51,7 @@ struct ServiceProvider {
 class Database {
 public:
 
-    std::vector<size_t> get_ranking(std::string& plz, std::size_t amount = 20);
+    std::vector<std::string> get_ranking(std::string& plz, std::size_t amount = 20);
 
 private:
     std::vector<std::string> get_neighbours(std::string& plz);
