@@ -2,6 +2,7 @@
 #include <optional>
 #include <string>
 #include <sw/redis++/redis.h>
+#include <utility>
 
 namespace database {
 
@@ -39,11 +40,16 @@ std::optional<std::pair<double, double>> Database::get_lat_lon_provider(std::str
     std::string prefix = "provider_";
     std::vector<std::optional<std::string>> vals;
     m_redis.hmget(prefix.append(wid), { "lat", "lon" }, std::back_inserter(vals));
+    if(!vals[0].has_value() || !vals[1].has_value()){
+        return {};
+    }
+    return std::make_pair(std::stod(vals[0].value()), std::stod(vals[1].value()));
 }
 
-std::optional<double> get_pfp_score(std::string& wid) {}
+std::optional<double> Database::get_pfp_score(std::string& wid) {
+}
 
-std::optional<double> get_pfd_score(std::string& wid) {}
+std::optional<double> Database::get_pfd_score(std::string& wid) {}
 
 std::optional<std::string> Database::get_nearest_plz(std::string& wid)
 {
