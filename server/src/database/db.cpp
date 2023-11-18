@@ -29,30 +29,40 @@ crow::json::wvalue Database::service_provider_ret_val(std::string& id, double ra
     return {};
 }
 
-std::optional<std::string> Database::get_plz_density(std::string& plz){
-   return m_redis.get(plz); 
+std::optional<std::string> Database::get_plz_density(std::string& plz)
+{
+    return m_redis.get(plz.append("_group"));
 }
 
-std::optional<std::pair<double, double>> Database::get_lat_lon_provider(std::string& wid){
+std::optional<std::pair<double, double>> Database::get_lat_lon_provider(std::string& wid)
+{
+    std::string prefix = "provider_";
+    std::vector<std::optional<std::string>> vals;
+    m_redis.hmget(prefix.append(wid), { "lat", "lon" }, std::back_inserter(vals));
+}
+
+std::optional<double> get_pfp_score(std::string& wid) {}
+
+std::optional<double> get_pfd_score(std::string& wid) {}
+
+std::optional<std::string> Database::get_nearest_plz(std::string& wid)
+{
     // TODO
 }
 
-
-std::optional<std::string> Database::get_nearest_plz(std::string& wid){
+int Database::set_pfp_score(std::string& wid, char score)
+{
     // TODO
 }
 
-int Database::set_pfp_score(std::string& wid, char score){
+int Database::set_pfd_score(std::string& wid, char score)
+{
     // TODO
 }
 
-int Database::set_pfd_score(std::string& wid, char score){
+int Database::set_max_distance(std::string& wid, size_t max_distance)
+{
     // TODO
 }
-
-int Database::set_max_distance(std::string& wid, size_t max_distance){
-    // TODO
-}
-
 
 }
