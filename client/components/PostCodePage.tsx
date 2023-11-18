@@ -47,7 +47,6 @@ const PostCodePage: React.FC<PostCodePageProps> = ({ onSearch, postCode }) => {
           type="primary"
           onClick={(e) => {
             if (postcode.length != 5 || !postcodes.includes(postcode)) {
-              console.log("invalid!");
               message.error("Invalid postcode!");
               e.stopPropagation();
             } else {

@@ -22,7 +22,7 @@ function EditWorkerModal(props: EditWorkerProps) {
   return (
     <Modal
       open={open}
-      title="New Scenario"
+      title="Update Craftsman Profile"
       centered
       width="60vw"
       onCancel={() => {
@@ -41,9 +41,14 @@ function EditWorkerModal(props: EditWorkerProps) {
           key="create"
           type="primary"
           onClick={() => {}}
-          disabled={maxDrivingDistance === ""}
+          disabled={
+            craftsmanID === "" &&
+            (maxDrivingDistance === "" ||
+              profilePictureScore === "" ||
+              profileDescriptionScore === "")
+          }
         >
-          Create new Scenario
+          Update Craftsman Profile
         </Button>,
       ]}
     >
