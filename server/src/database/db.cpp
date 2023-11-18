@@ -27,4 +27,30 @@ crow::json::wvalue Database::service_provider_ret_val(std::string& id, double ra
     // TODO
     return {};
 }
+
+std::string get_plz_density(std::string& plz){
+    // TODO
+}
+
+std::pair<double, double> get_lat_lon_provider(std::string& wid){
+    // TODO
+}
+
+int set_max_distance(std::string& wid){
+    // TODO
+}
+
+std::string get_nearest_plz(std::string& wid){
+    // TODO
+}
+
+int set_pfp_score(char score){
+    // TODO
+}
+
+int set_pfd_score(char score){
+    // TODO
+}
+
+
 }
