@@ -1,5 +1,7 @@
 #include "db.h"
 #include <iostream>
+#include <string>
+#include <sw/redis++/redis.h>
 
 namespace database {
 
@@ -20,10 +22,9 @@ Database::~Database()
 
 std::vector<ServiceProvider> Database::get_ranking(std::string& plz, std::size_t amount)
 {
-    redisReply* reply = static_cast<redisReply*>(redisCommand(m_c, "SMEMBERS %s", plz.c_str()));
-    std::cout << reply->str << '\n';
-    freeReplyObject(reply);
+    auto redis = sw::redis::Redis("tcp://127.0.0.1");
+    redis.set("key", "value");
+       return {};
+}
+}
 
-    return {};
-}
-}

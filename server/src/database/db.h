@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include <hiredis/hiredis.h>
+#include <sw/redis++/redis++.h>
 
 namespace database {
 

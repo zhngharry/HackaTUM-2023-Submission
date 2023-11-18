@@ -1,5 +1,8 @@
-#include "src/api/routes.h"
+#include "src/database/db.h"
 
-int main() {
-    api::start_api();
+
+int main(void){
+    database::Database db{};
+    std::string plz = "99817";
+    db.get_ranking(plz);
 }
