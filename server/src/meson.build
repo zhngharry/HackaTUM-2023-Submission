@@ -1,1 +1,2 @@
-src_fils += files('db.cpp')
+subdir('database')
+subdir('api')
