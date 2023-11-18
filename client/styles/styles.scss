@@ -1,0 +1,60 @@
+.main-layout {
+  height: 100%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+
+  .sub-layout {
+    flex: 1;
+    flex-direction: column;
+    height: calc(100% - 80px);
+    background-color: white;
+
+    .content {
+      flex: 1;
+      text-align: center;
+      background-color: white;
+    }
+
+    .page-header {
+      text-align: center;
+      background-color: white;
+      color: white;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
+      margin-bottom: 20px;
+
+      .steps {
+        background-color: white;
+        width: 70%;
+      }
+    }
+  }
+}
+
+.root {
+  height: 100%;
+  background-color: white;
+
+  .body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #063773;
+      text-align: center;
+      height: 80px;
+    }
+
+    .image {
+      padding: 20px;
+    }
+  }
+}

@@ -1,21 +1,33 @@
-import React from 'react';
-import { Inter } from 'next/font/google';
+import React from "react";
+import StyledComponentsRegistry from "../lib/AntdRegistry";
+import Image from "next/image";
 
-import StyledComponentsRegistry from '../lib/AntdRegistry';
-
-const inter = Inter({ subsets: ['latin'] });
+import "../styles/styles.scss";
 
 export const metadata = {
-  title: 'Check24 Craftsmen Finder',
-  description: 'Find the best craftsmen in your area',
+  title: "Check24 Craftsmen Finder",
+  description: "Find the best craftsmen in your area",
 };
 
-const RootLayout = ({ children }: React.PropsWithChildren) => (
-  <html lang="en">
-    <body className={inter.className}>
-      <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
-    </body>
-  </html>
-);
+const RootLayout = ({ children }: React.PropsWithChildren) => {
+
+
+  return (
+    <html lang="en" className="root">
+      <body className="body">
+        <header className="header">
+          <Image
+            className="image"
+            src="/check24Logo.svg"
+            alt="Logo"
+            width={150}
+            height={60}
+          />
+        </header>
+        <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+      </body>
+    </html>
+  );
+};
 
 export default RootLayout;
