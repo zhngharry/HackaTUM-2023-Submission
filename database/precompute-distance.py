@@ -31,15 +31,12 @@ def decimal_to_base_n(decimal_number, base):
 
 def compute_distances(service_providers, postcodes):
     for provider in service_providers:
-        if provider['id'] < 34750:
-            continue
         distances = {}  # A dictionary to collect distances for each postcode
         postcode_distances = []
         for postcode in postcodes:
             distance = calculate_distance(provider, postcode)
             if distance < HIGHEST_DISTANCE:
-                pc_cmp = decimal_to_base_n(int(postcode['postcode']), 50)
-                postcode_distances.append((distance, pc_cmp))
+                postcode_distances.append((distance, postcode['postcode']))
 
         # Sort the distances by the first element (distance)
 
