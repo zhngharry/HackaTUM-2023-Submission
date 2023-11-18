@@ -1,0 +1,14 @@
+version: "3"
+services:
+  redistest:
+    image: redis
+    volumes:
+      - ./data:/data
+    ports:
+      - "6379:6379"
+  cpp-api:
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
