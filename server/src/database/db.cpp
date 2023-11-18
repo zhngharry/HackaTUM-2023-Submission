@@ -47,6 +47,16 @@ std::optional<std::pair<double, double>> Database::get_lat_lon_provider(std::str
 }
 
 std::optional<double> Database::get_pfp_score(std::string& wid) {
+    std::string prefix = "provider_";
+    auto result = m_redis.hget(prefix.append(wid), "profile_picture_score");
+    if(!result.has_value()){
+        return {};
+    }
+    return std::stod(result.value());
+}
+
+std::optional<double> get_max_distance(std::string& wid){
+
 }
 
 std::optional<double> Database::get_pfd_score(std::string& wid) {}

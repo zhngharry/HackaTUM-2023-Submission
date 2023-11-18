@@ -22,6 +22,7 @@ public:
     std::optional<std::string> get_nearest_plz(std::string& wid);
     std::optional<double> get_pfp_score(std::string& wid);
     std::optional<double> get_pfd_score(std::string& wid);
+    std::optional<double> get_max_distance(std::string& wid);
 
     /* Set maximum distance of given worder id
      * @param: 
