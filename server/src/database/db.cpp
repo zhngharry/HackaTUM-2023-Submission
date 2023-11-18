@@ -1,4 +1,5 @@
 #include "db.h"
+#include <optional>
 #include <string>
 #include <sw/redis++/redis.h>
 
@@ -28,27 +29,28 @@ crow::json::wvalue Database::service_provider_ret_val(std::string& id, double ra
     return {};
 }
 
-std::string Database::get_plz_density(std::string& plz){
+std::optional<std::string> Database::get_plz_density(std::string& plz){
+   return m_redis.get(plz); 
+}
+
+std::optional<std::pair<double, double>> Database::get_lat_lon_provider(std::string& wid){
     // TODO
 }
 
-std::pair<double, double> Database::get_lat_lon_provider(std::string& wid){
+
+std::optional<std::string> Database::get_nearest_plz(std::string& wid){
     // TODO
 }
 
-int Database::set_max_distance(std::string& wid){
+int Database::set_pfp_score(std::string& wid, char score){
     // TODO
 }
 
-std::string Database::get_nearest_plz(std::string& wid){
+int Database::set_pfd_score(std::string& wid, char score){
     // TODO
 }
 
-int Database::set_pfp_score(char score){
-    // TODO
-}
-
-int Database::set_pfd_score(char score){
+int Database::set_max_distance(std::string& wid, size_t max_distance){
     // TODO
 }
 
