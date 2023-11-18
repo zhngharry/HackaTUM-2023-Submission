@@ -55,7 +55,7 @@ std::optional<double> Database::get_pfp_score(std::string& wid) {
     return std::stod(result.value());
 }
 
-std::optional<double> get_max_distance(std::string& wid){
+std::optional<double> Database::get_max_distance(std::string& wid){
 
 }
 
