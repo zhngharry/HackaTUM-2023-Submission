@@ -1,5 +1,5 @@
 #include "src/api/routes.h"
 
 int main() {
-    start_api();
+    api::start_api();
 }

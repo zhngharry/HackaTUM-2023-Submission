@@ -7,7 +7,7 @@ project('hackatum-backend', 'cpp',
 )
 
 src_files = [ 'main.cpp' ]
-subdir('src/api')
+subdir('src')
 
 dependencies = []
 
