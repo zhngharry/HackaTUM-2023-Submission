@@ -21,23 +21,14 @@ const ServiceListPage: React.FC<ServiceListPageProps> = ({
   };
 
   return (
-    <div className="custom-view">
-      <Layout>
-        <Header>
-          <Button onClick={handleBackClick}>Back</Button>
-          <Typography.Title level={1} style={{ marginBottom: "30px" }}>
-            Displaying results for Postcode {postCode}
-          </Typography.Title>
-            <Typography.Title level={3} italic style={{ marginBottom: "30px" }}>
-                Found x results in n seconds
-            </Typography.Title>
-        </Header>
-
-        <Content>
-            List of results
-        </Content>
-      </Layout>
-    </div>
+    <Layout className="list-layout">
+      <Header className="list-header" >
+        <Button onClick={handleBackClick}>Edit Postcode</Button>
+        <Typography.Title level={3}> Displaying results for Postcode {postCode} </Typography.Title>
+        <div></div>
+      </Header>
+      <Content>{"List of results"}</Content>
+    </Layout>
   );
 };
 

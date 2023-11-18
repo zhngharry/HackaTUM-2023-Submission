@@ -1,56 +1,82 @@
-// components/UpdateModal.tsx
-import React, { useState } from "react";
-import { Modal, Input } from "antd";
+import React, { useState, useContext } from "react";
+import { Modal, Button, Typography, message, Collapse } from "antd";
+import TextInputComponent from "./TextInputComponent";
 
-interface UpdateModalProps {
-  visible: boolean;
-  onCancel: () => void;
-  onUpdate: (data: { field1: string; field2: string; field3: string }) => void;
+const { Text } = Typography;
+
+interface EditWorkerProps {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  onUpdate: () => void;
 }
+// try to bypass BE test error
 
-const UpdateModal: React.FC<UpdateModalProps> = ({
-  visible,
-  onCancel,
-  onUpdate,
-}) => {
-  const [field1, setField1] = useState("");
-  const [field2, setField2] = useState("");
-  const [field3, setField3] = useState("");
-
-  const handleUpdate = () => {
-    // Perform update logic with the values of the three fields
-    onUpdate({ field1, field2, field3 });
-    // Reset fields and close the modal
-    setField1("");
-    setField2("");
-    setField3("");
-    onCancel();
-  };
+function EditWorkerModal(props: EditWorkerProps) {
+  const { open, setOpen } = props;
+  const [maxDrivingDistance, setMaxDrivingDistance] = useState<string>("");
+  const [profilePictureScore, setProfilePictureScore] = useState<string>("");
+  const [profileDescriptionScore, setProfileDescriptionScore] =
+    useState<string>("");
+  const [craftsmanID, setCraftsmanID] = useState<string>("");
 
   return (
     <Modal
-      title="Update Data"
-      open={visible}
-      onCancel={onCancel}
-      onOk={handleUpdate}
+      open={open}
+      title="New Scenario"
+      centered
+      width="60vw"
+      onCancel={() => {
+        setOpen(false);
+      }}
+      footer={[
+        <Button
+          key="cancel"
+          onClick={() => {
+            setOpen(false);
+          }}
+        >
+          Cancel
+        </Button>,
+        <Button
+          key="create"
+          type="primary"
+          onClick={() => {}}
+          disabled={maxDrivingDistance === ""}
+        >
+          Create new Scenario
+        </Button>,
+      ]}
     >
-      <Input
-        placeholder="Field 1"
-        value={field1}
-        onChange={(e) => setField1(e.target.value)}
-      />
-      <Input
-        placeholder="Field 2"
-        value={field2}
-        onChange={(e) => setField2(e.target.value)}
-      />
-      <Input
-        placeholder="Field 3"
-        value={field3}
-        onChange={(e) => setField3(e.target.value)}
-      />
+      <div style={{ marginBottom: "20px", marginTop: "20px" }}>
+        <div style={{ marginBottom: "20px" }}>
+          <TextInputComponent
+            title="Craftsman ID"
+            value={craftsmanID}
+            placeholder="Enter ID of craftsman"
+            onChange={(e) => setCraftsmanID(e.target.value)}
+          />
+          <TextInputComponent
+            title="Update Max Driving Distance"
+            value={maxDrivingDistance}
+            placeholder="Enter new driving distance in meters"
+            onChange={(e) => setMaxDrivingDistance(e.target.value)}
+          />
+          <TextInputComponent
+            title="Update Profile Picture Score"
+            value={profilePictureScore}
+            placeholder="Enter new profile picture score"
+            onChange={(e) => setProfilePictureScore(e.target.value)}
+          />
+          <TextInputComponent
+            title="Update Profile Description Score"
+            value={profileDescriptionScore}
+            placeholder="Enter new profile description score"
+            onChange={(e) => setProfileDescriptionScore(e.target.value)}
+          />
+        </div>
+      </div>
     </Modal>
   );
-};
+}
 
-export default UpdateModal;
+export default EditWorkerModal;

@@ -18,7 +18,7 @@ import ServiceListPage from "../../components/ServiceListPage";
 const { Content, Header } = Layout;
 
 const SearchPage = () => {
-  const stepItems = [
+  const [stepItems, setStepItems] = useState([
     {
       title: "Enter your postcode",
       status: "in progress",
@@ -34,7 +34,7 @@ const SearchPage = () => {
       status: "wait",
       icon: <CheckCircleOutlined />,
     },
-  ];
+  ]);
 
   const [currentStep, setCurrentStep] = useState(0);
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
@@ -51,17 +51,35 @@ const SearchPage = () => {
 
   const handleSearch = (postcode: string) => {
     setCurrentStep(1);
-    stepItems[0].status = "finish";
-    stepItems[0].icon = <CheckCircleOutlined />;
-    stepItems[1].status = "in progress";
+    setStepItems((prevStepItems) => [
+      {
+        ...prevStepItems[0],
+        status: "finish",
+        icon: <CheckCircleOutlined />,
+      },
+      {
+        ...prevStepItems[1],
+        status: "in progress",
+      },
+      prevStepItems[2], // No change for the third step
+    ]);
     setSelectedPostCode(postcode);
   };
 
   const handleBackClick = (postCode: string) => {
     setCurrentStep(0);
-    stepItems[0].status = "in progress";
-    stepItems[0].icon = <EnvironmentOutlined />;
-    stepItems[1].status = "wait";
+    setStepItems((prevStepItems) => [
+      {
+        ...prevStepItems[0],
+        status: "in progress",
+        icon: <EnvironmentOutlined />,
+      },
+      {
+        ...prevStepItems[1],
+        status: "wait",
+      },
+      prevStepItems[2], // No change for the third step
+    ]);
     setSelectedPostCode(postCode);
   };
 
@@ -96,8 +114,8 @@ const SearchPage = () => {
         </Layout>
       </div>
       <UpdateModal
-        visible={updateModalVisible}
-        onCancel={hideUpdateModal}
+        open={updateModalVisible}
+        setOpen={setUpdateModalVisible}
         onUpdate={() => {
           // TODO: Add logic to handle the update
           console.log("update");
