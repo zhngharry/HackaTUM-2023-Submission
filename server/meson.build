@@ -10,8 +10,10 @@ src_files = [ 'main.cpp' ]
 subdir('src')
 
 dependencies = [
-  dependency('hiredis')
+  dependency('redis++')
 ]
+
+
 
 target = executable(
   meson.project_name(),

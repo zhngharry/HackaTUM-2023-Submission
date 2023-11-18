@@ -1,29 +1,30 @@
 #include "db.h"
-#include <iostream>
+#include <string>
+#include <sw/redis++/redis.h>
 
 namespace database {
 
 Database::Database()
-    : m_c { redisConnect("localhost", 6379) }
+    : m_redis { "tcp://127.0.0.1" }
 {
-    if (m_c != nullptr && m_c->err) {
-        std::cerr << "Error: " << m_c->errstr << '\n';
-    } else {
-        std::cerr << "Successfully connected to database\n";
-    }
 }
 
-Database::~Database()
+std::vector<std::pair<std::string, double>> Database::get_precomputed_ranking(std::string plz)
 {
-    redisFree(m_c);
+    // TODO
+    return {};
 }
 
-std::vector<ServiceProvider> Database::get_ranking(std::string& plz, std::size_t amount)
+std::vector<std::string> Database::get_neighbours(std::string& plz)
 {
-    redisReply* reply = static_cast<redisReply*>(redisCommand(m_c, "SMEMBERS %s", plz.c_str()));
-    std::cout << reply->str << '\n';
-    freeReplyObject(reply);
+    std::vector<std::string> neighbours {};
+    m_redis.smembers(plz, std::inserter(neighbours, neighbours.begin()));
+    return neighbours;
+}
 
+crow::json::wvalue Database::service_provider_ret_val(std::string& id, double rankval)
+{
+    // TODO
     return {};
 }
 }
