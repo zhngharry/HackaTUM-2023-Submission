@@ -66,6 +66,9 @@ std::optional<std::pair<double, double>> Database::get_lat_lon_provider(std::str
     return std::make_pair(convert_string_2_double(vals[0].value()), convert_string_2_double(vals[1].value()));
 }
 
+std::optional<std::pair<double, double>> Database::get_lat_lon_plz(std::string& plz){}
+
+
 std::optional<double> Database::get_pfp_score(std::string& wid)
 {
     auto result = m_redis.hget(provider_prefix + wid, "profile_picture_score");

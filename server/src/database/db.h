@@ -19,6 +19,7 @@ public:
 
     std::optional<std::string> get_plz_density(std::string& plz);
     std::optional<std::pair<double, double>> get_lat_lon_provider(std::string& wid);
+    std::optional<std::pair<double, double>> get_lat_lon_plz(std::string& plz);
     std::optional<std::string> get_nearest_plz(std::string& wid);
     std::optional<double> get_pfp_score(std::string& wid);
     std::optional<double> get_pfd_score(std::string& wid);
