@@ -28,6 +28,10 @@ public:
     std::optional<double> get_pfd_score(std::string& wid);
     std::optional<double> get_max_distance(std::string& wid);
 
+    void add_nerest_wi(const std::string& plz, std::vector<std::string> v);
+
+    std::vector<std::string> get_nearest_wi(std::string& plz);
+
     /* Set maximum distance of given worder id
      * @param:
      *  - wid (string)
