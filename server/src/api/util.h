@@ -13,6 +13,7 @@ namespace api::util {
 double calcGPSDistance(double latitud1, double longitud1, double latitud2, double longitud2);
 
 double calcMaxDistance(std::string& plz, double maxDistance);
+void reachable_plzs(std::function <void(std::string)> f,database::Database& db, std::string w_id);
 
-std::vector<std::string> reachable_plzs(database::Database& db, std::string w_id);
 }
+

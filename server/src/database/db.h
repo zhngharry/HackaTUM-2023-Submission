@@ -46,6 +46,16 @@ public:
      * */
     void set_pfd_score(std::string& wid, double score);
 
+
+    void update_wid_reachable(std::string& wid, std::string& plz, double dist);
+
+    void remove_wid_reachable(std::string& wid, std::string& plz);
+    
+    void update_plz_rank(std::string& wid, std::string& plz, double score);
+
+    void remove_plz_rank(std::string& wid, std::string& plz);
+
+
     
 
 private:

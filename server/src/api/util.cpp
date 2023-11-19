@@ -1,4 +1,5 @@
 #include "util.h"
+#include "src/database/db.h"
 #include <functional>
 #include <stack>
 #include <unordered_set>
@@ -38,11 +39,10 @@ double calcMaxDistance(database::Database& db, std::string& plz, double maxDista
     return 0;
 }
 
-
-
-
-
-void reachable_plzs(std::function <void(std::string)> f,database::Database& db, std::string w_id)
+void reachable_plzs(
+    std::function<void(std::string, std::string, double, database::Database&)> f,
+    database::Database& db,
+    std::string w_id)
 {
     std::vector<std::string> result {};
     std::stack<std::string> s {};
@@ -80,9 +80,11 @@ void reachable_plzs(std::function <void(std::string)> f,database::Database& db, 
             continue;
         }
 
-        if (calcGPSDistance(w_coords.first, w_coords.second, plz_coords.first, plz_coords.second) <
-            calcMaxDistance(plz, w_maxDist)) {
-            f(plz);
+        if (double dist =
+                calcGPSDistance(
+                    w_coords.first, w_coords.second, plz_coords.first, plz_coords.second) <
+                calcMaxDistance(plz, w_maxDist)) {
+            f(plz, w_id, dist, db);
 
             for (auto& neighbour : db.get_neighbours(plz)) {
                 if (!discovered.contains(neighbour)) {
@@ -92,9 +94,33 @@ void reachable_plzs(std::function <void(std::string)> f,database::Database& db, 
             }
         }
     }
-
-    return result;
+    return;
 }
 }
 
+void update_plz_wid(std::string plz, std::string w_id, double dist, database::Database& db)
+{
+    db.update_wid_reachable(w_id, plz, dist);
 
+    double pfp_score;
+    if (auto opt = db.get_pfp_score(w_id)) {
+        pfp_score = opt.value();
+    } else {
+        return;
+    }
+
+    double pfd_score;
+    if (auto opt = db.get_pfd_score(w_id)) {
+        pfd_score = opt.value();
+    } else {
+        return;
+    }
+
+    double profile_score = 0.4 * pfp_score + 0.6 * pfd_score;
+
+    double dist_score = 1 - (dist / 80);
+    double dist_weight = ((dist > 80) ? 0.01 : 0.15);
+    double total_score = dist_weight * dist_score + (1 - dist_weight) * profile_score;
+
+    db.update_plz_rank(w_id, plz, total_score);
+}

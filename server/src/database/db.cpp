@@ -7,7 +7,8 @@
 #include <utility>
 
 // helper function
-double convert_string_2_double(const std::string& input) {
+double convert_string_2_double(const std::string& input)
+{
     std::istringstream iss(input);
     // Set precision to maximum to preserve the exact representation
     iss >> std::setprecision(std::numeric_limits<double>::max_digits10);
@@ -22,8 +23,6 @@ double convert_string_2_double(const std::string& input) {
 
     return result;
 }
-
-
 
 namespace database {
 
@@ -53,7 +52,7 @@ crow::json::wvalue Database::service_provider_ret_val(std::string& id, double ra
 
 std::optional<std::string> Database::get_plz_density(std::string& plz)
 {
-    return m_redis.get(plz.append("_group"));
+    return m_redis.get(plz + "_group");
 }
 
 std::optional<std::pair<double, double>> Database::get_lat_lon_provider(std::string& wid)
@@ -63,19 +62,20 @@ std::optional<std::pair<double, double>> Database::get_lat_lon_provider(std::str
     if (!vals[0].has_value() || !vals[1].has_value()) {
         return {};
     }
-    return std::make_pair(convert_string_2_double(vals[0].value()), convert_string_2_double(vals[1].value()));
+    return std::make_pair(
+        convert_string_2_double(vals[0].value()), convert_string_2_double(vals[1].value()));
 }
 
-std::optional<std::pair<double, double>> Database::get_lat_lon_plz(std::string& plz){
+std::optional<std::pair<double, double>> Database::get_lat_lon_plz(std::string& plz)
+{
     std::vector<std::optional<std::string>> vals;
-    m_redis.hmget(plz.append("_coord"), { "lat", "lon" }, std::back_inserter(vals));
+    m_redis.hmget(plz + "_coord", { "lat", "lon" }, std::back_inserter(vals));
     if (!vals[0].has_value() || !vals[1].has_value()) {
         return {};
     }
-    return std::make_pair(convert_string_2_double(vals[0].value()), convert_string_2_double(vals[1].value()));
-
+    return std::make_pair(
+        convert_string_2_double(vals[0].value()), convert_string_2_double(vals[1].value()));
 }
-
 
 std::optional<double> Database::get_pfp_score(std::string& wid)
 {
@@ -130,6 +130,22 @@ void Database::set_max_distance(std::string& wid, size_t max_distance)
     m_redis.hset(provider_prefix + wid, "max_driving_distance", strs.str());
 }
 
+void Database::update_wid_reachable(std::string& wid, std::string& plz, double dist)
+{
+    std::ostringstream strs;
+    strs << dist;
+    m_redis.zadd("reachable_" + wid, strs.str(), plz);
 }
 
+void Database::remove_wid_reachable(std::string& wid, std::string& plz){
+    return;
+}
 
+void Database::update_plz_rank(std::string& wid, std::string& plz, double score)
+{
+    std::ostringstream strs;
+    strs << score;
+    m_redis.zadd("rank_" + plz, strs.str(), wid);
+}
+
+}
