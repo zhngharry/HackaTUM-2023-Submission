@@ -45,6 +45,7 @@ void Api::define_get_craftsmen_endpoint()
 
         constexpr std::size_t per_page { 20 };
         std::vector<crow::json::wvalue> res_list {};
+        // TODO: fix for condition
         for (std::size_t i { per_page * page }; i < ranking.size(); ++i) {
             res_list.push_back(
                 m_db.service_provider_ret_val(ranking.at(i).first, ranking.at(i).second));
@@ -134,7 +135,7 @@ void Api::define_patch_craftsman_endpoint()
                     }
                 }
 
-                update_profileScores(profilePictureScore, profileDescriptionScore);
+                update_profileScores(id_str, profilePictureScore, profileDescriptionScore);
             }
 
             res.write(crow::json::wvalue {
@@ -155,7 +156,8 @@ bool Api::update_maxDrivingDistance(std::string w_id, double maxDrivingDistance)
     return true;
 }
 
-bool Api::update_profileScores(double profilePictureScore, double profileDescriptionScore)
+bool Api::update_profileScores(
+    std::string w_id, double profilePictureScore, double profileDescriptionScore)
 {
     // TODO
     return true;
