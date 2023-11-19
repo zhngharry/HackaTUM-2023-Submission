@@ -1,28 +1,11 @@
 #include "db.h"
+#include "src/api/util.h"
 #include <cwchar>
 #include <optional>
 #include <sstream>
 #include <string>
 #include <sw/redis++/redis.h>
 #include <utility>
-
-// helper function
-double convert_string_2_double(const std::string& input)
-{
-    std::istringstream iss(input);
-    // Set precision to maximum to preserve the exact representation
-    iss >> std::setprecision(std::numeric_limits<double>::max_digits10);
-
-    double result;
-    iss >> result;
-
-    if (iss.fail()) {
-        // Handle conversion failure
-        throw std::invalid_argument("Invalid input for conversion to double.");
-    }
-
-    return result;
-}
 
 namespace database {
 
@@ -31,10 +14,12 @@ Database::Database()
 {
 }
 
-std::vector<std::pair<std::string, double>> Database::get_precomputed_ranking(std::string plz)
+std::vector<std::pair<std::string, double>> Database::get_precomputed_ranking(
+    std::string plz, std::size_t start, std::size_t end)
 {
-    // TODO
-    return {};
+    std::vector<std::pair<std::string, double>> result {};
+    m_redis.zrange("rank_" + plz, start, end, std::back_inserter(result));
+    return result;
 }
 
 std::vector<std::string> Database::get_neighbours(std::string& plz)
@@ -44,10 +29,34 @@ std::vector<std::string> Database::get_neighbours(std::string& plz)
     return neighbours;
 }
 
-crow::json::wvalue Database::service_provider_ret_val(std::string& id, double rankval)
+crow::json::wvalue Database::service_provider_ret_val(
+    std::string& id, double rankval, std::string plz)
 {
-    // TODO
-    return {};
+    std::pair<double, double> plz_coords;
+    if (auto opt = get_lat_lon_plz(plz)) {
+        plz_coords = opt.value();
+    } else {
+        return {};
+    }
+    std::pair<double, double> w_coords;
+    if (auto opt = get_lat_lon_provider(id)) {
+        w_coords = opt.value();
+    } else {
+        return {};
+    }
+
+    double distance = api::util::calcGPSDistance(
+        plz_coords.first, plz_coords.second, w_coords.first, w_coords.second);
+
+    std::unordered_map<std::string, std::string> map {};
+    m_redis.hgetall("provider_" + id, std::inserter(map, map.begin()));
+    return { { "id", std::stoi(id) },
+             { "name", map.find("name")->second },
+             { "rankingScore", rankval },
+             { "distance", distance },
+             { "city", map.find("city")->second },
+             { "street", map.find("street")->second },
+             { "house_number", map.find("house_number")->second } };
 }
 
 std::optional<std::string> Database::get_plz_density(std::string& plz)
@@ -63,7 +72,8 @@ std::optional<std::pair<double, double>> Database::get_lat_lon_provider(std::str
         return {};
     }
     return std::make_pair(
-        convert_string_2_double(vals[0].value()), convert_string_2_double(vals[1].value()));
+        std::strtod(vals[0].value().c_str(), nullptr),
+        std::strtod(vals[1].value().c_str(), nullptr));
 }
 
 std::optional<std::pair<double, double>> Database::get_lat_lon_plz(std::string& plz)
@@ -74,7 +84,8 @@ std::optional<std::pair<double, double>> Database::get_lat_lon_plz(std::string& 
         return {};
     }
     return std::make_pair(
-        convert_string_2_double(vals[0].value()), convert_string_2_double(vals[1].value()));
+        std::strtod(vals[0].value().c_str(), nullptr),
+        std::strtod(vals[1].value().c_str(), nullptr));
 }
 
 std::optional<double> Database::get_pfp_score(std::string& wid)
@@ -83,7 +94,7 @@ std::optional<double> Database::get_pfp_score(std::string& wid)
     if (!result.has_value()) {
         return {};
     }
-    return convert_string_2_double(result.value());
+    return std::strtod(result.value().c_str(), nullptr);
 }
 
 std::optional<double> Database::get_pfd_score(std::string& wid)
@@ -92,7 +103,7 @@ std::optional<double> Database::get_pfd_score(std::string& wid)
     if (!result.has_value()) {
         return {};
     }
-    return convert_string_2_double(result.value());
+    return std::strtod(result.value().c_str(), nullptr);
 }
 
 std::optional<double> Database::get_max_distance(std::string& wid)
@@ -101,7 +112,7 @@ std::optional<double> Database::get_max_distance(std::string& wid)
     if (!result.has_value()) {
         return {};
     }
-    return convert_string_2_double(result.value());
+    return std::strtod(result.value().c_str(), nullptr);
 }
 
 std::optional<std::string> Database::get_nearest_plz(std::string& wid)

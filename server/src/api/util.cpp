@@ -83,6 +83,7 @@ void reachable_plzs(
         double dist =
             calcGPSDistance(w_coords.first, w_coords.second, plz_coords.first, plz_coords.second);
         if (dist < calcMaxDistance(db, plz, w_maxDist)) {
+
             f(plz, w_id, dist, db);
             um.insert(std::make_pair(plz, dist));
 

@@ -41,14 +41,15 @@ void Api::define_get_craftsmen_endpoint()
             }
         }
 
-        auto ranking = m_db.get_precomputed_ranking(postalcode);
-
         constexpr std::size_t per_page { 20 };
+        auto ranking =
+            m_db.get_precomputed_ranking(postalcode, page * per_page, page * per_page + per_page);
+        // TODO filtering
+
         std::vector<crow::json::wvalue> res_list {};
-        // TODO: fix for condition
-        for (std::size_t i { per_page * page }; i < ranking.size(); ++i) {
+        for (auto& rank : ranking) {
             res_list.push_back(
-                m_db.service_provider_ret_val(ranking.at(i).first, ranking.at(i).second));
+                m_db.service_provider_ret_val(rank.first, rank.second, postalcode));
         }
 
         res.code = crow::OK;
