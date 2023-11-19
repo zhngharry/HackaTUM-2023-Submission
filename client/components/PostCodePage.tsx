@@ -43,8 +43,8 @@ const PostCodePage: React.FC<PostCodePageProps> = ({ onSearch, postCode }) => {
 
   return (
     <div className="custom-view">
-      <Typography.Title level={1}>Enter your Postcode</Typography.Title>
-      <Space.Compact style={{ width: "70%" }}>
+      <Typography.Title level={1}>Find skilled and trusted professionals in your area.</Typography.Title>
+      <Space.Compact style={{ width: "50%" }}>
         <Input
           size="large"
           placeholder="Postcode"

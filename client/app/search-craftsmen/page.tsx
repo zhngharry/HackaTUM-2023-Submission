@@ -9,6 +9,7 @@ import {
   Steps,
   message,
   Spin,
+  Tooltip,
 } from "antd";
 import theme from "../../theme/themeConfig";
 import {
@@ -60,6 +61,7 @@ const SearchPage = () => {
   const [selectedPostCode, setSelectedPostCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [craftsmen, setCraftsmen] = useState<Craftsman[]>([]);
+  
 
   const showUpdateModal = () => {
     setUpdateModalVisible(true);
@@ -108,12 +110,14 @@ const SearchPage = () => {
     <ConfigProvider theme={theme}>
       <div className="main-layout">
         {currentStep === 0 ? (
-          <FloatButton
-            icon={<EditOutlined />}
-            type="primary"
-            onClick={showUpdateModal}
-            style={{ height: "75px", width: "75px" }}
-          />
+          <Tooltip title="Edit Worker Profile">
+            <FloatButton
+              icon={<EditOutlined />}
+              type="primary"
+              onClick={showUpdateModal}
+              style={{ height: "75px", width: "75px" }}
+            />
+          </Tooltip>
         ) : null}
         <Layout className="sub-layout">
           <Header className="page-header">
@@ -130,6 +134,7 @@ const SearchPage = () => {
                 stepBack={() => handleBackClick(selectedPostCode)}
                 postCode={selectedPostCode}
                 craftsmen={craftsmen}
+                setCraftsmen={setCraftsmen}
                 loading={loading}
                 setLoading={setLoading}
               />

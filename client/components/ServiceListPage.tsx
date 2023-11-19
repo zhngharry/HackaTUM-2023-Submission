@@ -1,21 +1,26 @@
 "use client";
 
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../styles/styles.scss";
 import {
   Button,
   Layout,
-  Typography,
-  Card,
-  Menu,
   Dropdown,
   Space,
   MenuProps,
   Spin,
+  FloatButton,
+  Tooltip,
 } from "antd";
 import ServiceCard from "./ServiceCard";
-import { DownOutlined, LeftOutlined, LoadingOutlined } from "@ant-design/icons";
+import {
+  DownOutlined,
+  LeftOutlined,
+  LoadingOutlined,
+  UpOutlined,
+} from "@ant-design/icons";
+import { getListOfCraftsmen } from "../services/craftsmenAPI";
 
 const { Content, Header, Sider } = Layout;
 
@@ -33,6 +38,7 @@ interface ServiceListPageProps {
   stepBack: (postCode: string) => void;
   postCode: string;
   craftsmen: Craftsman[];
+  setCraftsmen: (craftsmen: Craftsman[]) => void;
   loading: boolean;
   setLoading: (loading: boolean) => void;
 }
@@ -49,21 +55,13 @@ const ServiceListPage: React.FC<ServiceListPageProps> = ({
   stepBack,
   postCode,
   craftsmen,
+  setCraftsmen,
   loading,
   setLoading,
 }) => {
-  const handleBackClick = () => {
-    stepBack(postCode);
-  };
-
-  const handleLoadMore = () => {};
-
   const [sortType, setSortType] = useState<string>("0");
-
-  const handleMenuClick: MenuProps["onClick"] = (e) => {
-    setSortType(e.key);
-    // setCraftsmen(getListOfCraftsmen(postCode, e.key));
-  };
+  const [loadMoreLoading, setLoadMoreLoading] = useState<boolean>(false);
+  const [showButton, setShowButton] = useState<boolean>(false);
 
   const items: MenuProps["items"] = [
     {
@@ -71,14 +69,88 @@ const ServiceListPage: React.FC<ServiceListPageProps> = ({
       key: "0",
     },
     {
-      label: "Rating" + (sortType === "1" ? " (selected)" : ""),
+      label: "Profile Score only" + (sortType === "1" ? " (selected)" : ""),
       key: "1",
     },
     {
-      label: "Distance" + (sortType === "2" ? " (selected)" : ""),
+      label: "Distance only" + (sortType === "2" ? " (selected)" : ""),
       key: "2",
     },
   ];
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowButton(window.scrollY > 500);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const handleBackClick = () => {
+    stepBack(postCode);
+  };
+
+  const handleSort = (sortType: string) => {
+    let sortedCraftsmen = [...craftsmen];
+    switch (sortType) {
+      case "0":
+        // Sort by Relevance (your custom sorting logic)
+        sortedCraftsmen.sort(
+          (a, b) =>
+            parseInt((b.rankingScore * 100).toFixed(1)) -
+            parseInt((a.rankingScore * 100).toFixed(1))
+        );
+        break;
+      case "1":
+        // Sort by Profile Score only
+        sortedCraftsmen.sort(
+          (a, b) =>
+            parseInt((b.rankingScore * 100).toFixed(1)) -
+            parseInt((a.rankingScore * 100).toFixed(1))
+        );
+        break;
+      case "2":
+        // Sort by Distance only
+        sortedCraftsmen.sort(
+          (a, b) =>
+            parseInt((a.distance * 100).toFixed(1)) -
+            parseInt((b.distance * 100).toFixed(1))
+        );
+        break;
+      default:
+        // Default sorting logic (e.g., no sorting)
+        break;
+    }
+    setCraftsmen([]);
+    setCraftsmen(sortedCraftsmen);
+  };
+
+  const handleLoadMore = () => {
+    setLoadMoreLoading(true);
+    console.log("load more");
+    getListOfCraftsmen(parseInt(postCode)).then((response) => {
+      setCraftsmen([...craftsmen, ...response]);
+      setLoadMoreLoading(false);
+    });
+    handleSort(sortType);
+  };
+
+  const handleMenuClick: MenuProps["onClick"] = (e) => {
+    const key = e.key;
+    setSortType(key);
+    handleSort(key);
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // Optional: Add smooth scrolling behavior
+    });
+  };
 
   return (
     <Layout className="list-layout">
@@ -136,7 +208,7 @@ const ServiceListPage: React.FC<ServiceListPageProps> = ({
             >
               {craftsmen.map((craftsman, index) => (
                 <ServiceCard
-                  key={craftsman.id}
+                  key={index}
                   name={craftsman.name}
                   city={craftsman.city}
                   street={craftsman.street}
@@ -146,16 +218,36 @@ const ServiceListPage: React.FC<ServiceListPageProps> = ({
                   imagePath={imageFilenames[index % imageFilenames.length]}
                 />
               ))}
-              <Button
-                className="load-more"
-                onClick={handleLoadMore}
-                style={{ color: "white" }}
-              >
-                Load More
-              </Button>
+              {loadMoreLoading ? (
+                <Spin
+                  className="load-more-spinner"
+                  size="large"
+                  indicator={<LoadingOutlined style={{ fontSize: 50 }} spin />}
+                />
+              ) : (
+                <Button
+                  className="load-more"
+                  onClick={handleLoadMore}
+                  style={{ color: "white" }}
+                >
+                  Load More
+                </Button>
+              )}
             </Space>
           </Content>
         </Layout>
+      )}
+      {showButton && (
+        <Tooltip title="Scroll back to top">
+          <FloatButton
+            icon={<UpOutlined />}
+            type="default"
+            onClick={scrollToTop}
+            style={{ height: "50px", width: "50px" }}
+          >
+            Scroll to Top
+          </FloatButton>
+        </Tooltip>
       )}
     </Layout>
   );
