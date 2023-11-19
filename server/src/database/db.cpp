@@ -1,29 +1,12 @@
 #include "db.h"
+#include "src/api/util.h"
 #include <cwchar>
+#include <iterator>
 #include <optional>
 #include <sstream>
 #include <string>
 #include <sw/redis++/redis.h>
 #include <utility>
-
-// helper function
-double convert_string_2_double(const std::string& input) {
-    std::istringstream iss(input);
-    // Set precision to maximum to preserve the exact representation
-    iss >> std::setprecision(std::numeric_limits<double>::max_digits10);
-
-    double result;
-    iss >> result;
-
-    if (iss.fail()) {
-        // Handle conversion failure
-        throw std::invalid_argument("Invalid input for conversion to double.");
-    }
-
-    return result;
-}
-
-
 
 namespace database {
 
@@ -32,10 +15,12 @@ Database::Database()
 {
 }
 
-std::vector<std::pair<std::string, double>> Database::get_precomputed_ranking(std::string plz)
+std::vector<std::pair<std::string, double>> Database::get_precomputed_ranking(
+    std::string plz, std::size_t start, std::size_t end)
 {
-    // TODO
-    return {};
+    std::vector<std::pair<std::string, double>> result {};
+    m_redis.zrange("rank_" + plz, start, end, std::back_inserter(result));
+    return result;
 }
 
 std::vector<std::string> Database::get_neighbours(std::string& plz)
@@ -45,15 +30,39 @@ std::vector<std::string> Database::get_neighbours(std::string& plz)
     return neighbours;
 }
 
-crow::json::wvalue Database::service_provider_ret_val(std::string& id, double rankval)
+crow::json::wvalue Database::service_provider_ret_val(
+    std::string& id, double rankval, std::string plz)
 {
-    // TODO
-    return {};
+    std::pair<double, double> plz_coords;
+    if (auto opt = get_lat_lon_plz(plz)) {
+        plz_coords = opt.value();
+    } else {
+        return {};
+    }
+    std::pair<double, double> w_coords;
+    if (auto opt = get_lat_lon_provider(id)) {
+        w_coords = opt.value();
+    } else {
+        return {};
+    }
+
+    double distance = api::util::calcGPSDistance(
+        plz_coords.first, plz_coords.second, w_coords.first, w_coords.second);
+
+    std::unordered_map<std::string, std::string> map {};
+    m_redis.hgetall("provider_" + id, std::inserter(map, map.begin()));
+    return { { "id", std::stoi(id) },
+             { "name", map.find("name")->second },
+             { "rankingScore", rankval },
+             { "distance", distance },
+             { "city", map.find("city")->second },
+             { "street", map.find("street")->second },
+             { "house_number", map.find("house_number")->second } };
 }
 
 std::optional<std::string> Database::get_plz_density(std::string& plz)
 {
-    return m_redis.get(plz.append("_group"));
+    return m_redis.get(plz + "_group");
 }
 
 std::optional<std::pair<double, double>> Database::get_lat_lon_provider(std::string& wid)
@@ -63,11 +72,22 @@ std::optional<std::pair<double, double>> Database::get_lat_lon_provider(std::str
     if (!vals[0].has_value() || !vals[1].has_value()) {
         return {};
     }
-    return std::make_pair(convert_string_2_double(vals[0].value()), convert_string_2_double(vals[1].value()));
+    return std::make_pair(
+        std::strtod(vals[0].value().c_str(), nullptr),
+        std::strtod(vals[1].value().c_str(), nullptr));
 }
 
-std::optional<std::pair<double, double>> Database::get_lat_lon_plz(std::string& plz){}
-
+std::optional<std::pair<double, double>> Database::get_lat_lon_plz(std::string& plz)
+{
+    std::vector<std::optional<std::string>> vals;
+    m_redis.hmget(plz + "_coord", { "lat", "lon" }, std::back_inserter(vals));
+    if (!vals[0].has_value() || !vals[1].has_value()) {
+        return {};
+    }
+    return std::make_pair(
+        std::strtod(vals[0].value().c_str(), nullptr),
+        std::strtod(vals[1].value().c_str(), nullptr));
+}
 
 std::optional<double> Database::get_pfp_score(std::string& wid)
 {
@@ -75,7 +95,7 @@ std::optional<double> Database::get_pfp_score(std::string& wid)
     if (!result.has_value()) {
         return {};
     }
-    return convert_string_2_double(result.value());
+    return std::strtod(result.value().c_str(), nullptr);
 }
 
 std::optional<double> Database::get_pfd_score(std::string& wid)
@@ -84,7 +104,7 @@ std::optional<double> Database::get_pfd_score(std::string& wid)
     if (!result.has_value()) {
         return {};
     }
-    return convert_string_2_double(result.value());
+    return std::strtod(result.value().c_str(), nullptr);
 }
 
 std::optional<double> Database::get_max_distance(std::string& wid)
@@ -93,7 +113,7 @@ std::optional<double> Database::get_max_distance(std::string& wid)
     if (!result.has_value()) {
         return {};
     }
-    return convert_string_2_double(result.value());
+    return std::strtod(result.value().c_str(), nullptr);
 }
 
 std::optional<std::string> Database::get_nearest_plz(std::string& wid)
@@ -122,6 +142,45 @@ void Database::set_max_distance(std::string& wid, size_t max_distance)
     m_redis.hset(provider_prefix + wid, "max_driving_distance", strs.str());
 }
 
+
+void Database::add_nerest_wi(const std::string& plz, std::vector<std::string> v){
+    m_redis.lpush("nearest_"+plz, v.begin(), v.end());
 }
 
 
+std::vector<std::string> Database::get_nearest_wi(std::string& plz){
+    std::vector<std::string> result;
+    m_redis.lrange(plz, 0, -1, std::back_inserter(result));
+}
+
+void Database::update_wid_reachable(std::string& wid, std::string& plz, double dist)
+{
+    std::string prefix = "reachable_";
+    m_redis.zadd(prefix+wid, plz, dist);
+}
+
+void Database::update_wid_reachable_mass(std::string& wid, std::unordered_map<std::string, double> um)
+{
+    std::string prefix = "reachable_";
+    m_redis.zadd(prefix+wid, um.begin(), um.end());
+}
+
+
+void Database::remove_wid_reachable(std::string& wid, std::string& plz){
+    return;
+}
+
+void Database::update_plz_rank(std::string& wid, std::string& plz, double score)
+{
+    std::string prefix = "rank_";
+    m_redis.zadd(prefix+plz, wid, score);
+}
+
+
+void Database::update_plz_rank_mass(const std::string& plz, std::unordered_map<std::string, double> um){
+    std::string prefix = "rank_";
+    m_redis.zadd(prefix+plz, um.begin(), um.end() );
+
+}
+
+}
