@@ -1,7 +1,7 @@
 #include "util.h"
 #include "src/database/db.h"
 #include <functional>
-#include <stack>
+#include <queue>
 #include <unordered_set>
 
 namespace api::util {
@@ -39,81 +39,88 @@ double calcMaxDistance(database::Database& db, std::string& plz, double maxDista
     return 0;
 }
 
-void reachable_plzs(
-    std::function<void(std::string, std::string, double, database::Database&)> f,
-    database::Database& db,
-    std::string w_id)
+std::set<std::pair<std::string, double>, comp> get_ranking(database::Database& db, std::string plz)
 {
-    std::stack<std::string> s {};
+    std::set<std::pair<std::string, double>, comp> ranking {};
+
+    std::queue<std::string> q {};
     std::unordered_set<std::string> discovered {};
 
-    std::unordered_map<std::string, double> um{};
-
-    if (auto opt = db.get_nearest_plz(w_id)) {
-        s.push(opt.value());
-        discovered.insert(opt.value());
-    } else {
-        return;
-    }
-
     std::pair<double, double> w_coords {};
-    if (auto opt = db.get_lat_lon_provider(w_id)) {
-        w_coords = opt.value();
-    } else {
-        return;
-    }
 
-    double w_maxDist;
-    if (auto opt = db.get_max_distance(w_id)) {
-        w_maxDist = opt.value() / 1000;
-    } else {
-        return;
-    }
+    q.push(plz);
+    discovered.insert(plz);
 
-    while (!s.empty()) {
-        std::string plz = s.top();
-        s.pop();
+    while (!q.empty()) {
+        std::string current_plz = q.front();
+        q.pop();
 
         std::pair<double, double> plz_coords;
-        if (auto opt = db.get_lat_lon_plz(plz)) {
+        if (auto opt = db.get_lat_lon_plz(current_plz)) {
             plz_coords = opt.value();
         } else {
             continue;
         }
-        double dist =
-            calcGPSDistance(w_coords.first, w_coords.second, plz_coords.first, plz_coords.second);
-        if (dist < calcMaxDistance(db, plz, w_maxDist)) {
 
-            f(plz, w_id, dist, db);
-            um.insert(std::make_pair(plz, dist));
+        std::vector<std::string> w_nearest {}; // TODO
 
-            for (auto& neighbour : db.get_neighbours(plz)) {
-                if (!discovered.contains(neighbour)) {
-                    discovered.insert(neighbour);
-                    s.push(std::move(neighbour));
-                }
+        for (auto& w_id : w_nearest) {
+            std::pair<double, double> w_coords;
+            if (auto opt = db.get_lat_lon_provider(w_id)) {
+                w_coords = opt.value();
+            } else {
+                continue;
+            }
+
+            double dist = calcGPSDistance(
+                w_coords.first, w_coords.second, plz_coords.first, plz_coords.second);
+
+            double w_maxDist;
+            if (auto opt = db.get_max_distance(w_id)) {
+                w_maxDist = opt.value() / 1000;
+            } else {
+                continue;
+            }
+
+            if (dist < calcMaxDistance(db, current_plz, w_maxDist)) {
+                ranking.insert(std::make_pair(w_id, calculateScore(db, w_id, dist)));
+            }
+        }
+
+        for (auto& neighbour : db.get_neighbours(current_plz)) {
+            std::pair<double, double> n_coords;
+            if (auto opt = db.get_lat_lon_plz(neighbour)) {
+                n_coords = opt.value();
+            } else {
+                continue;
+            }
+
+            double dist = calcGPSDistance(
+                plz_coords.first, plz_coords.second, n_coords.first, n_coords.second);
+
+            if (!discovered.contains(neighbour) && dist < db.maxMaxDist + 20) {
+                discovered.insert(neighbour);
+                q.push(std::move(neighbour));
             }
         }
     }
-    return;
+    return ranking;
 }
 
-void update_plz_wid(std::string plz, std::string w_id, double dist, database::Database& db)
+double calculateScore(database::Database& db, std::string& w_id, double dist)
 {
-    //db.update_wid_reachable(w_id, plz, dist);
-
     double pfp_score;
     if (auto opt = db.get_pfp_score(w_id)) {
         pfp_score = opt.value();
     } else {
-        return;
+        return 0.0;
     }
 
     double pfd_score;
     if (auto opt = db.get_pfd_score(w_id)) {
         pfd_score = opt.value();
     } else {
-        return;
+        return 0.0;
     }
 
     double profile_score = 0.4 * pfp_score + 0.6 * pfd_score;
@@ -122,7 +129,7 @@ void update_plz_wid(std::string plz, std::string w_id, double dist, database::Da
     double dist_weight = ((dist > 80) ? 0.01 : 0.15);
     double total_score = dist_weight * dist_score + (1 - dist_weight) * profile_score;
 
-    db.update_plz_rank(w_id, plz, total_score);
+    return total_score;
 }
 
 }

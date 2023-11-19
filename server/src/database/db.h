@@ -12,11 +12,13 @@ class Database {
 public:
     Database();
 
+    double maxMaxDist { 99 };
+
     std::vector<std::pair<std::string, double>> get_precomputed_ranking(
         std::string plz, std::size_t start, std::size_t end);
     std::vector<std::string> get_neighbours(std::string& plz);
 
-    crow::json::wvalue service_provider_ret_val(std::string& id, double rankval, std::string plz);
+    crow::json::wvalue service_provider_ret_val(std::string id, double rankval, std::string plz);
 
     std::optional<std::string> get_plz_density(std::string& plz);
     std::optional<std::pair<double, double>> get_lat_lon_provider(std::string& wid);

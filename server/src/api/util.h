@@ -2,8 +2,8 @@
 
 #include "src/database/db.h"
 #include <cmath>
+#include <set>
 #include <string>
-#include <vector>
 
 constexpr double RADIO_TERRESTRE { 6372797.56085 };
 constexpr double PI { 3.14159265358979323846 };
@@ -14,12 +14,15 @@ double calcGPSDistance(double latitud1, double longitud1, double latitud2, doubl
 
 double calcMaxDistance(database::Database& db, std::string& plz, double maxDistance);
 
-void reachable_plzs(
-    std::function<void(std::string, std::string, double, database::Database&)> f,
-    database::Database& db,
-    std::string w_id);
+struct comp {
+    bool operator()(
+        const std::pair<std::string, double>& p1, const std::pair<std::string, double>& p2) const
+    {
+        return p1.second > p2.second;
+    }
+};
+std::set<std::pair<std::string, double>, comp> get_ranking(database::Database& db, std::string plz);
 
-
-void update_plz_wid(std::string plz, std::string w_id, double dist, database::Database& db);
+double calculateScore(database::Database& db, std::string& w_id, double dist);
 
 }

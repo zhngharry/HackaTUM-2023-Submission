@@ -1,4 +1,5 @@
 #include "api.h"
+#include "src/api/util.h"
 #include <crow.h>
 #include <crow/common.h>
 
@@ -42,14 +43,18 @@ void Api::define_get_craftsmen_endpoint()
         }
 
         constexpr std::size_t per_page { 20 };
-        auto ranking =
-            m_db.get_precomputed_ranking(postalcode, page * per_page, page * per_page + per_page);
+        auto ranking = util::get_ranking(m_db, postalcode);
         // TODO filtering
 
         std::vector<crow::json::wvalue> res_list {};
-        for (auto& rank : ranking) {
-            res_list.push_back(
-                m_db.service_provider_ret_val(rank.first, rank.second, postalcode));
+        std::size_t i { 0 };
+        auto it = ranking.begin();
+        // skip first pages (by far not the best way)
+        for (; it != ranking.end() && i < page * per_page; it++, ++i)
+            ;
+
+        for (; it != ranking.end() && i < (page + 1) * per_page; it++, ++i) {
+            res_list.push_back(m_db.service_provider_ret_val(it->first, it->second, postalcode));
         }
 
         res.code = crow::OK;
@@ -151,16 +156,18 @@ void Api::define_patch_craftsman_endpoint()
         });
 }
 
-bool Api::update_maxDrivingDistance(std::string w_id, double maxDrivingDistance)
+void Api::update_maxDrivingDistance(std::string w_id, double maxDrivingDistance)
 {
-
-    
+    if (maxDrivingDistance > m_db.maxMaxDist) {
+        m_db.maxMaxDist = maxDrivingDistance;
+    }
+    m_db.set_max_distance(w_id, maxDrivingDistance);
 }
 
-bool Api::update_profileScores(
+void Api::update_profileScores(
     std::string w_id, double profilePictureScore, double profileDescriptionScore)
 {
-    // TODO
-    return true;
+    m_db.set_pfp_score(w_id, profilePictureScore);
+    m_db.set_pfd_score(w_id, profileDescriptionScore);
 }
 }

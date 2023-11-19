@@ -30,7 +30,7 @@ std::vector<std::string> Database::get_neighbours(std::string& plz)
 }
 
 crow::json::wvalue Database::service_provider_ret_val(
-    std::string& id, double rankval, std::string plz)
+    std::string id, double rankval, std::string plz)
 {
     std::pair<double, double> plz_coords;
     if (auto opt = get_lat_lon_plz(plz)) {
@@ -50,9 +50,25 @@ crow::json::wvalue Database::service_provider_ret_val(
 
     std::unordered_map<std::string, std::string> map {};
     m_redis.hgetall("provider_" + id, std::inserter(map, map.begin()));
+    // TODO: add score
+    double pfp_score;
+    if (auto opt = get_pfp_score(id)) {
+        pfp_score = opt.value();
+    } else {
+        return {};
+    }
+
+    double pfd_score;
+    if (auto opt = get_pfd_score(id)) {
+        pfd_score = opt.value();
+    } else {
+        return {};
+    }
+
     return { { "id", std::stoi(id) },
              { "name", map.find("name")->second },
              { "rankingScore", rankval },
+             { "profile_score", 0.4 * pfp_score + 0.6 * pfd_score },
              { "distance", distance },
              { "city", map.find("city")->second },
              { "street", map.find("street")->second },
@@ -144,31 +160,32 @@ void Database::set_max_distance(std::string& wid, size_t max_distance)
 void Database::update_wid_reachable(std::string& wid, std::string& plz, double dist)
 {
     std::string prefix = "reachable_";
-    m_redis.zadd(prefix+wid, plz, dist);
+    m_redis.zadd(prefix + wid, plz, dist);
 }
 
-void Database::update_wid_reachable_mass(std::string& wid, std::unordered_map<std::string, double> um)
+void Database::update_wid_reachable_mass(
+    std::string& wid, std::unordered_map<std::string, double> um)
 {
     std::string prefix = "reachable_";
-    m_redis.zadd(prefix+wid, um.begin(), um.end());
+    m_redis.zadd(prefix + wid, um.begin(), um.end());
 }
 
-
-void Database::remove_wid_reachable(std::string& wid, std::string& plz){
+void Database::remove_wid_reachable(std::string& wid, std::string& plz)
+{
     return;
 }
 
 void Database::update_plz_rank(std::string& wid, std::string& plz, double score)
 {
     std::string prefix = "rank_";
-    m_redis.zadd(prefix+plz, wid, score);
+    m_redis.zadd(prefix + plz, wid, score);
 }
 
-
-void Database::update_plz_rank_mass(const std::string& plz, std::unordered_map<std::string, double> um){
+void Database::update_plz_rank_mass(
+    const std::string& plz, std::unordered_map<std::string, double> um)
+{
     std::string prefix = "rank_";
-    m_redis.zadd(prefix+plz, um.begin(), um.end() );
-
+    m_redis.zadd(prefix + plz, um.begin(), um.end());
 }
 
 }
