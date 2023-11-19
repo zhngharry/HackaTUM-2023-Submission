@@ -1,4 +1,5 @@
 #include "db.h"
+#include "src/api/util.h"
 #include <cwchar>
 #include <optional>
 #include <sstream>
@@ -13,10 +14,12 @@ Database::Database()
 {
 }
 
-std::vector<std::pair<std::string, double>> Database::get_precomputed_ranking(std::string plz)
+std::vector<std::pair<std::string, double>> Database::get_precomputed_ranking(
+    std::string plz, std::size_t start, std::size_t end)
 {
-    // TODO
-    return {};
+    std::vector<std::pair<std::string, double>> result {};
+    m_redis.zrange("rank_" + plz, start, end, std::back_inserter(result));
+    return result;
 }
 
 std::vector<std::string> Database::get_neighbours(std::string& plz)
@@ -26,10 +29,34 @@ std::vector<std::string> Database::get_neighbours(std::string& plz)
     return neighbours;
 }
 
-crow::json::wvalue Database::service_provider_ret_val(std::string& id, double rankval)
+crow::json::wvalue Database::service_provider_ret_val(
+    std::string& id, double rankval, std::string plz)
 {
-    // TODO
-    return {};
+    std::pair<double, double> plz_coords;
+    if (auto opt = get_lat_lon_plz(plz)) {
+        plz_coords = opt.value();
+    } else {
+        return {};
+    }
+    std::pair<double, double> w_coords;
+    if (auto opt = get_lat_lon_provider(id)) {
+        w_coords = opt.value();
+    } else {
+        return {};
+    }
+
+    double distance = api::util::calcGPSDistance(
+        plz_coords.first, plz_coords.second, w_coords.first, w_coords.second);
+
+    std::unordered_map<std::string, std::string> map {};
+    m_redis.hgetall("provider_" + id, std::inserter(map, map.begin()));
+    return { { "id", std::stoi(id) },
+             { "name", map.find("name")->second },
+             { "rankingScore", rankval },
+             { "distance", distance },
+             { "city", map.find("city")->second },
+             { "street", map.find("street")->second },
+             { "house_number", map.find("house_number")->second } };
 }
 
 std::optional<std::string> Database::get_plz_density(std::string& plz)
