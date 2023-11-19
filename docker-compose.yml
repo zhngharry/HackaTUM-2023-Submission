@@ -7,11 +7,11 @@ services:
     ports:
       - "6379:6379"
   cpp-api:
-    build: 
+    build:
       context: ./server
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "3000:3000"
   frontend:
     build:
       context: ./client

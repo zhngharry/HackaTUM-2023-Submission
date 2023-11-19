@@ -35,6 +35,7 @@ interface Craftsman {
   street: string;
   houseNumber: string;
   rankingScore: number;
+  profile_score: number;
   distance: number;
 }
 

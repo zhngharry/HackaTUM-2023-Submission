@@ -1,0 +1,202 @@
+[
+    {
+      "street": "Zemlak Row",
+      "distance": 42.72,
+      "rankingScore": 0.67,
+      "house_number": "101",
+      "city": "Lucaschester",
+      "name": "Jaymie Rogahn",
+      "id": 1,
+      "profile_score": 7.3
+    },
+    {
+      "street": "Borer Terrace",
+      "distance": 78.65,
+      "rankingScore": 0.77,
+      "house_number": "226",
+      "city": "West Annelle",
+      "name": "Berniece Buckridge",
+      "id": 2,
+      "profile_score": 4.5
+    },
+    {
+      "street": "Justa Junction",
+      "distance": 34.96,
+      "rankingScore": 0.89,
+      "house_number": "1",
+      "city": "Lakeshatown",
+      "name": "Hazel Monahan",
+      "id": 3,
+      "profile_score": 9.2
+    },
+    {
+      "street": "Osvaldo Avenue",
+      "distance": 100.23,
+      "rankingScore": 0.53,
+      "house_number": "10",
+      "city": "North Verna",
+      "name": "Harold White",
+      "id": 4,
+      "profile_score": 2.8
+    },
+    {
+      "street": "Clair Light",
+      "distance": 72.44,
+      "rankingScore": 0.6,
+      "house_number": "17",
+      "city": "Mitchelltown",
+      "name": "Lyda Bergnaum",
+      "id": 5,
+      "profile_score": 6.1
+    },
+    {
+      "street": "Heaney Lodge",
+      "distance": 76.45,
+      "rankingScore": 0.81,
+      "house_number": "7",
+      "city": "North Rhett",
+      "name": "Roxann Kohler",
+      "id": 6,
+      "profile_score": 8.7
+    },
+    {
+      "street": "Gottlieb Grove",
+      "distance": 56.12,
+      "rankingScore": 0.36,
+      "house_number": "44",
+      "city": "New Shonnaland",
+      "name": "Isidro McClure",
+      "id": 7,
+      "profile_score": 3.4
+    },
+    {
+      "street": "Reinger Ford",
+      "distance": 99.63,
+      "rankingScore": 0.2,
+      "house_number": "91",
+      "city": "Boscofort",
+      "name": "Alva Stiedemann",
+      "id": 8,
+      "profile_score": 5.6
+    },
+    {
+      "street": "Beier Bypass",
+      "distance": 80.06,
+      "rankingScore": 0.51,
+      "house_number": "191",
+      "city": "Lake Myriamtown",
+      "name": "Robert Conroy",
+      "id": 9,
+      "profile_score": 7.8
+    },
+    {
+      "street": "Ying Stravenue",
+      "distance": 14.7,
+      "rankingScore": 0.54,
+      "house_number": "5",
+      "city": "Shawnaborough",
+      "name": "Jada Heathcote",
+      "id": 10,
+      "profile_score": 4.2
+    },
+    {
+      "street": "Merrill Highway",
+      "distance": 116.22,
+      "rankingScore": 0.1,
+      "house_number": "56",
+      "city": "Consuelofort",
+      "name": "Angie Bernier",
+      "id": 11,
+      "profile_score": 9.8
+    },
+    {
+      "street": "Watsica Plains",
+      "distance": 49.77,
+      "rankingScore": 0.09,
+      "house_number": "6",
+      "city": "West Alvaland",
+      "name": "Murray Jerde",
+      "id": 12,
+      "profile_score": 1.5
+    },
+    {
+      "street": "Chadwick Brook",
+      "distance": 72.0,
+      "rankingScore": 0.14,
+      "house_number": "54",
+      "city": "Beermouth",
+      "name": "Berenice Deckow",
+      "id": 13,
+      "profile_score": 3.9
+    },
+    {
+      "street": "Xiomara Row",
+      "distance": 61.35,
+      "rankingScore": 0.88,
+      "house_number": "1",
+      "city": "West Eulaliabury",
+      "name": "Rafael Stanton",
+      "id": 14,
+      "profile_score": 9.5
+    },
+    {
+      "street": "Stark Lights",
+      "distance": 118.55,
+      "rankingScore": 0.05,
+      "house_number": "217",
+      "city": "Kuvalisside",
+      "name": "Sonny Strosin",
+      "id": 15,
+      "profile_score": 1.2
+    },
+    {
+      "street": "Otis Club",
+      "distance": 74.96,
+      "rankingScore": 0.75,
+      "house_number": "5",
+      "city": "West Jenniffertown",
+      "name": "Claudie Mraz",
+      "id": 16,
+      "profile_score": 8.3
+    },
+    {
+      "street": "Phil Village",
+      "distance": 82.11,
+      "rankingScore": 0.29,
+      "house_number": "19",
+      "city": "Donnellyburgh",
+      "name": "Stacey King",
+      "id": 17,
+      "profile_score": 2.5
+    },
+    {
+      "street": "Stamm Mountain",
+      "distance": 108.35,
+      "rankingScore": 0.81,
+      "house_number": "241 a",
+      "city": "Walkerfort",
+      "name": "Gabriel Veum",
+      "id": 18,
+      "profile_score": 8.7
+    },
+    {
+      "street": "Larkin Views",
+      "distance": 21.17,
+      "rankingScore": 0.28,
+      "house_number": "44",
+      "city": "West Dexter",
+      "name": "Drucilla Lindgren",
+      "id": 19,
+      "profile_score": 2.4
+    },
+    {
+      "street": "Dean Road",
+      "distance": 69.68,
+      "rankingScore": 0.85,
+      "house_number": "10",
+      "city": "North Doloresfort",
+      "name": "Jonas Hettinger",
+      "id": 20,
+      "profile_score": 9.1
+    }
+  ]

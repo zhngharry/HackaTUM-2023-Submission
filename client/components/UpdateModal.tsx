@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Modal, Button, Typography, message } from "antd";
 import TextInputComponent from "./TextInputComponent";
 import { useMediaQuery } from "react-responsive";
-import { patchUser } from "../services/craftsmenAPI";
 
 const { Text } = Typography;
 
@@ -51,20 +50,6 @@ function EditWorkerModal(props: EditWorkerProps) {
           key="update"
           type="primary"
           onClick={() => {
-            patchUser(parseInt(craftsmanID), {
-              maxDrivingDistance:
-                maxDrivingDistance === ""
-                  ? undefined
-                  : parseInt(maxDrivingDistance),
-              profilePictureScore:
-                profilePictureScore === ""
-                  ? undefined
-                  : parseInt(profilePictureScore),
-              profileDescriptionScore:
-                profileDescriptionScore === ""
-                  ? undefined
-                  : parseInt(profileDescriptionScore),
-            });
             setOpen(false);
             setMaxDrivingDistance("");
             setProfilePictureScore("");

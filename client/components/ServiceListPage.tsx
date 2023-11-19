@@ -32,6 +32,7 @@ interface Craftsman {
   city: string;
   street: string;
   houseNumber: string;
+  profile_score: number;
   rankingScore: number;
   distance: number;
 }
@@ -114,8 +115,8 @@ const ServiceListPage: React.FC<ServiceListPageProps> = ({
         // Sort by Profile Score only
         sortedCraftsmen.sort(
           (a, b) =>
-            parseInt((b.rankingScore * 100).toFixed(1)) -
-            parseInt((a.rankingScore * 100).toFixed(1))
+            parseInt((b.profile_score * 100).toFixed(1)) -
+            parseInt((a.profile_score * 100).toFixed(1))
         );
         break;
       case "2":
@@ -235,6 +236,7 @@ const ServiceListPage: React.FC<ServiceListPageProps> = ({
                   city={craftsman.city}
                   street={craftsman.street}
                   houseNumber={craftsman.houseNumber}
+                  profile_score={craftsman.profile_score}
                   rankingScore={craftsman.rankingScore}
                   distance={craftsman.distance}
                   imagePath={imageFilenames[index % imageFilenames.length]}

@@ -14,6 +14,7 @@ interface ServiceCardProps {
   street: string;
   houseNumber: string;
   rankingScore: number;
+  profile_score: number;
   distance: number;
   imagePath: string;
 }
@@ -38,43 +39,59 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   rankingScore,
   distance,
   imagePath,
+  profile_score,
 }) => {
-  const adjective = getAdjective(rankingScore * 10);
+  const adjective = getAdjective(profile_score);
 
   const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
 
   return (
-    <Card className="service-card" hoverable style={{width: isMobile ? "90vw" : "70vw"}}>
+    <Card
+      className="service-card"
+      hoverable
+      style={{ width: isMobile ? "90vw" : "70vw" }}
+    >
       <div className="service-card">
-        {isMobile ? null : <Image
-          className="service-image"
-          src={`/craftsman_pictures/${imagePath}`}
-          alt="Image"
-          width={125}
-          height={125}
-        />}
-        <div className="service-card-text" style={{width : isMobile ? "" : "80%" }}>
+        {isMobile ? null : (
+          <Image
+            className="service-image"
+            src={`/craftsman_pictures/${imagePath}`}
+            alt="Image"
+            width={125}
+            height={125}
+          />
+        )}
+        <div
+          className="service-card-text"
+          style={{ width: isMobile ? "" : "80%" }}
+        >
           <div className="service-card-title">{name}</div>
           <div className="ranking-avatar-container">
             <Avatar
               shape="square"
               style={{
-                backgroundColor: rankingScore < 0.8 ? "#063773" : "#b39656",
+                backgroundColor: profile_score < 8.0 ? "#063773" : "#b39656",
                 width: isMobile ? "35px" : "50px",
-                height: isMobile ? "35px" :  "50px",
+                height: isMobile ? "35px" : "50px",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize:  isMobile ? "16px" : "20px",
+                fontSize: isMobile ? "16px" : "20px",
                 fontStyle: "bold",
               }}
             >
-              {(10 * rankingScore).toFixed(1)}
+              {profile_score.toFixed(1)}
             </Avatar>
             <div className="adjective-text">{adjective}</div>
           </div>
 
-          <div className="service-card-description" style={{width: isMobile ? "75vw" : "60vw", gap: isMobile ? "2px" : "10px"}}>
+          <div
+            className="service-card-description"
+            style={{
+              width: isMobile ? "75vw" : "60vw",
+              gap: isMobile ? "2px" : "10px",
+            }}
+          >
             <div className="service-card-distance">
               <CarOutlined />
               {distance.toFixed(1)} km away
@@ -82,7 +99,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 
             <div className="service-card-city">
               <EnvironmentOutlined />
-              {isMobile ? `${city}`  : `Located in ${city}`}
+              {isMobile ? `${city}` : `Located in ${city}`}
             </div>
           </div>
         </div>
