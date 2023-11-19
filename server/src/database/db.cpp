@@ -1,6 +1,7 @@
 #include "db.h"
 #include "src/api/util.h"
 #include <cwchar>
+#include <iterator>
 #include <optional>
 #include <sstream>
 #include <string>
@@ -139,6 +140,17 @@ void Database::set_max_distance(std::string& wid, size_t max_distance)
     std::ostringstream strs;
     strs << max_distance;
     m_redis.hset(provider_prefix + wid, "max_driving_distance", strs.str());
+}
+
+
+void Database::add_nerest_wi(const std::string& plz, std::vector<std::string> v){
+    m_redis.lpush("nearest_"+plz, v.begin(), v.end());
+}
+
+
+std::vector<std::string> Database::get_nearest_wi(std::string& plz){
+    std::vector<std::string> result;
+    m_redis.lrange(plz, 0, -1, std::back_inserter(result));
 }
 
 void Database::update_wid_reachable(std::string& wid, std::string& plz, double dist)
