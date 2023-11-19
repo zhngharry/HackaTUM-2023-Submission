@@ -1,5 +1,7 @@
 #include "db.h"
+#include <cwchar>
 #include <optional>
+#include <sstream>
 #include <string>
 #include <sw/redis++/redis.h>
 #include <utility>
@@ -37,48 +39,65 @@ std::optional<std::string> Database::get_plz_density(std::string& plz)
 
 std::optional<std::pair<double, double>> Database::get_lat_lon_provider(std::string& wid)
 {
-    std::string prefix = "provider_";
     std::vector<std::optional<std::string>> vals;
-    m_redis.hmget(prefix.append(wid), { "lat", "lon" }, std::back_inserter(vals));
-    if(!vals[0].has_value() || !vals[1].has_value()){
+    m_redis.hmget(provider_prefix + wid, { "lat", "lon" }, std::back_inserter(vals));
+    if (!vals[0].has_value() || !vals[1].has_value()) {
         return {};
     }
     return std::make_pair(std::stod(vals[0].value()), std::stod(vals[1].value()));
 }
 
-std::optional<double> Database::get_pfp_score(std::string& wid) {
-    std::string prefix = "provider_";
-    auto result = m_redis.hget(prefix.append(wid), "profile_picture_score");
-    if(!result.has_value()){
+std::optional<double> Database::get_pfp_score(std::string& wid)
+{
+    auto result = m_redis.hget(provider_prefix + wid, "profile_picture_score");
+    if (!result.has_value()) {
         return {};
     }
     return std::stod(result.value());
 }
 
-std::optional<double> Database::get_max_distance(std::string& wid){
-
+std::optional<double> Database::get_pfd_score(std::string& wid)
+{
+    auto result = m_redis.hget(provider_prefix + wid, "profile_description_score");
+    if (!result.has_value()) {
+        return {};
+    }
+    return std::stod(result.value());
 }
 
-std::optional<double> Database::get_pfd_score(std::string& wid) {}
+std::optional<double> Database::get_max_distance(std::string& wid)
+{
+    auto result = m_redis.hget(provider_prefix + wid, "max_driving_distance");
+    if (!result.has_value()) {
+        return {};
+    }
+    return std::stod(result.value());
+}
 
 std::optional<std::string> Database::get_nearest_plz(std::string& wid)
 {
-    // TODO
+    return m_redis.hget(provider_prefix + wid, "nearest_plz");
 }
 
-int Database::set_pfp_score(std::string& wid, char score)
+void Database::set_pfp_score(std::string& wid, double score)
 {
-    // TODO
+    std::ostringstream strs;
+    strs << score;
+    m_redis.hset(provider_prefix + wid, "profile_picture_score", strs.str());
 }
 
-int Database::set_pfd_score(std::string& wid, char score)
+void Database::set_pfd_score(std::string& wid, double score)
 {
-    // TODO
+    std::ostringstream strs;
+    strs << score;
+    m_redis.hset(provider_prefix + wid, "profile_description_score", strs.str());
 }
 
-int Database::set_max_distance(std::string& wid, size_t max_distance)
+void Database::set_max_distance(std::string& wid, size_t max_distance)
 {
-    // TODO
+    std::ostringstream strs;
+    strs << max_distance;
+    m_redis.hset(provider_prefix + wid, "max_driving_distance", strs.str());
 }
 
 }

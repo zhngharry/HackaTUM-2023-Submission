@@ -28,34 +28,26 @@ public:
      * @param: 
      *  - wid (string)
      *  - max_distance (size_t)
-     *
-     * @returns:
-     *  - result (int): 1 if sucessful, 0 if not
      * */
-    int set_max_distance(std::string& wid, size_t max_distance);
+    void set_max_distance(std::string& wid, size_t max_distance);
 
     /* Set profile picture score of given worder id
      * @param: 
      *  - wid (string)
      *  - score (char)
-     *
-     * @returns:
-     *  - result (int): 1 if sucessful, 0 if not
      * */
-    int set_pfp_score(std::string& wid, char score);
+    void set_pfp_score(std::string& wid, double score);
 
     /* Set profile description score of given worder id
      * @param: 
      *  - wid (string)
      *  - score (char)
-     *
-     * @returns:
-     *  - result (int): 1 if sucessful, 0 if not
      * */
-    int set_pfd_score(std::string& wid, char score);
+    void set_pfd_score(std::string& wid, double score);
 
 private:
     sw::redis::Redis m_redis;
+    static constexpr std::string provider_prefix{"provider_"};
 };
 
 }
