@@ -1,4 +1,5 @@
 #include "util.h"
+#include <functional>
 #include <stack>
 #include <unordered_set>
 
@@ -37,7 +38,11 @@ double calcMaxDistance(database::Database& db, std::string& plz, double maxDista
     return 0;
 }
 
-std::vector<std::string> reachable_plzs(database::Database& db, std::string w_id)
+
+
+
+
+void reachable_plzs(std::function <void(std::string)> f,database::Database& db, std::string w_id)
 {
     std::vector<std::string> result {};
     std::stack<std::string> s {};
@@ -47,21 +52,21 @@ std::vector<std::string> reachable_plzs(database::Database& db, std::string w_id
         s.push(opt.value());
         discovered.insert(opt.value());
     } else {
-        return {};
+        return;
     }
 
     std::pair<double, double> w_coords {};
     if (auto opt = db.get_lat_lon_provider(w_id)) {
         w_coords = opt.value();
     } else {
-        return {};
+        return;
     }
 
     double w_maxDist;
     if (auto opt = db.get_max_distance(w_id)) {
         w_maxDist = opt.value();
     } else {
-        return {};
+        return;
     }
 
     while (!s.empty()) {
@@ -77,7 +82,7 @@ std::vector<std::string> reachable_plzs(database::Database& db, std::string w_id
 
         if (calcGPSDistance(w_coords.first, w_coords.second, plz_coords.first, plz_coords.second) <
             calcMaxDistance(plz, w_maxDist)) {
-            result.push_back(plz);
+            f(plz);
 
             for (auto& neighbour : db.get_neighbours(plz)) {
                 if (!discovered.contains(neighbour)) {
@@ -91,3 +96,5 @@ std::vector<std::string> reachable_plzs(database::Database& db, std::string w_id
     return result;
 }
 }
+
+

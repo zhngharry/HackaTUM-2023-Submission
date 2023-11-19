@@ -46,6 +46,8 @@ public:
      * */
     void set_pfd_score(std::string& wid, double score);
 
+    
+
 private:
     sw::redis::Redis m_redis;
     static constexpr std::string provider_prefix{"provider_"};
