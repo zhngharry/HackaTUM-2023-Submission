@@ -2,13 +2,6 @@ import json
 from haversine import haversine
 import redis
 
-""" 
-This script calculates every neighbour PLZ for every PLZ and stores those to the database.
-This is done by matching edge points: If two PLZ have the same edge points they are evaluated to be
-neighbours. 
-"""
-
-MAX_NEIGHBOUR_DISTANCE = 30
 
 with open('everything.json', 'r') as file:
     everything = json.load(file)
@@ -39,7 +32,7 @@ for pzl in everything:
         if yname in pzl_map.get(pzl.get('name')) or yname is pzl.get('name'):
             continue
 
-        if haversine((lat, long), (laty, longy), unit='km') < MAX_NEIGHBOUR_DISTANCE:
+        if haversine((lat, long), (laty, longy), unit='km') < 30:
             for x_coord in x_coords:
                 if x_coord in y.get('geometry').get('geometry').get('coordinates')[0]:
                     redis_conn.sadd(pzl.get('name'), y.get('name'))
