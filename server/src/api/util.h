@@ -15,5 +15,7 @@ double calcGPSDistance(double latitud1, double longitud1, double latitud2, doubl
 double calcMaxDistance(std::string& plz, double maxDistance);
 void reachable_plzs(std::function <void(std::string)> f,database::Database& db, std::string w_id);
 
+    
+
 }
 
