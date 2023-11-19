@@ -6,6 +6,25 @@
 #include <sw/redis++/redis.h>
 #include <utility>
 
+// helper function
+double convert_string_2_double(const std::string& input) {
+    std::istringstream iss(input);
+    // Set precision to maximum to preserve the exact representation
+    iss >> std::setprecision(std::numeric_limits<double>::max_digits10);
+
+    double result;
+    iss >> result;
+
+    if (iss.fail()) {
+        // Handle conversion failure
+        throw std::invalid_argument("Invalid input for conversion to double.");
+    }
+
+    return result;
+}
+
+
+
 namespace database {
 
 Database::Database()
@@ -44,7 +63,7 @@ std::optional<std::pair<double, double>> Database::get_lat_lon_provider(std::str
     if (!vals[0].has_value() || !vals[1].has_value()) {
         return {};
     }
-    return std::make_pair(std::stod(vals[0].value()), std::stod(vals[1].value()));
+    return std::make_pair(convert_string_2_double(vals[0].value()), convert_string_2_double(vals[1].value()));
 }
 
 std::optional<double> Database::get_pfp_score(std::string& wid)
@@ -53,7 +72,7 @@ std::optional<double> Database::get_pfp_score(std::string& wid)
     if (!result.has_value()) {
         return {};
     }
-    return std::stod(result.value());
+    return convert_string_2_double(result.value());
 }
 
 std::optional<double> Database::get_pfd_score(std::string& wid)
@@ -62,7 +81,7 @@ std::optional<double> Database::get_pfd_score(std::string& wid)
     if (!result.has_value()) {
         return {};
     }
-    return std::stod(result.value());
+    return convert_string_2_double(result.value());
 }
 
 std::optional<double> Database::get_max_distance(std::string& wid)
@@ -71,7 +90,7 @@ std::optional<double> Database::get_max_distance(std::string& wid)
     if (!result.has_value()) {
         return {};
     }
-    return std::stod(result.value());
+    return convert_string_2_double(result.value());
 }
 
 std::optional<std::string> Database::get_nearest_plz(std::string& wid)
@@ -101,3 +120,5 @@ void Database::set_max_distance(std::string& wid, size_t max_distance)
 }
 
 }
+
+
