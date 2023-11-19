@@ -20,6 +20,8 @@ import {
   LoadingOutlined,
   UpOutlined,
 } from "@ant-design/icons";
+import { useMediaQuery } from "react-responsive";
+
 import { getListOfCraftsmen } from "../services/craftsmenAPI";
 
 const { Content, Header, Sider } = Layout;
@@ -59,6 +61,8 @@ const ServiceListPage: React.FC<ServiceListPageProps> = ({
   loading,
   setLoading,
 }) => {
+  const isMobile = useMediaQuery({ maxWidth: 767 });
+
   const [sortType, setSortType] = useState<string>("0");
   const [loadMoreLoading, setLoadMoreLoading] = useState<boolean>(false);
   const [showButton, setShowButton] = useState<boolean>(false);
@@ -154,16 +158,29 @@ const ServiceListPage: React.FC<ServiceListPageProps> = ({
 
   return (
     <Layout className="list-layout">
-      <Header className="list-header">
+      <Header className="list-header" style={{width: isMobile ? "100vw" : "70vw"}}>
         <Button
+          size={isMobile ? "small" : "middle"}
           type="primary"
           onClick={handleBackClick}
-          style={{ height: "70%", borderRadius: 12, fontWeight: "bold" }}
+          style={{
+            height: isMobile ? "30px" : "70%",
+            borderRadius: isMobile ? 8 : 12,
+            fontWeight: "bold",
+          }}
         >
           <LeftOutlined />
-          Edit Postcode
+          {isMobile ? null : "Edit Postcode"}
         </Button>
-        <div className="list-title">Professionals matching your Postcode</div>
+        <div
+          style={{
+            fontSize: isMobile ? "20px" : "30px",
+            fontWeight: "bold",
+            color: "#063773",
+          }}
+        >
+          {isMobile ? "Results" : "Professionals matching your Postcode"}
+        </div>
         <Dropdown
           menu={{ items, onClick: handleMenuClick }}
           trigger={["click"]}
@@ -171,7 +188,7 @@ const ServiceListPage: React.FC<ServiceListPageProps> = ({
           disabled={loading}
         >
           <a onClick={(e) => e.preventDefault()}>
-            <Space style={{ fontWeight: "bold" }}>
+            <Space style={{ fontWeight: "bold", height: "100%" }}>
               Sort results by
               <DownOutlined />
             </Space>

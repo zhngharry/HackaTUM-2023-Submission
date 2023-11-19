@@ -11,6 +11,7 @@
     height: calc(100% - 80px);
     background-color: white;
     width: 100%;
+    ;
 
     .content {
       flex: 1;
@@ -51,7 +52,7 @@
   align-items: center;
 
   .list-header {
-    width: 70%;
+    
     background-color: #f4f4f4;
     display: flex;
     justify-content: space-between;
@@ -60,11 +61,7 @@
     align-content: center;
     margin-top: 1%;
 
-    .list-title {
-      font-size: 30px;
-      font-weight: bold;
-      color: #063773;
-    }
+    
   }
 
   .list-sublayout {
@@ -88,12 +85,12 @@
 
         .service-card {
           background-color: white;
-          width: 1200px;
-          height: 200px;
+          
+          height: 20vh;
           display: flex;
           justify-content: flex-start;
           align-items: center;
-          border-radius: 20px;
+          border-radius: 15px;
 
           .ranking-avatar-container {
             display: flex;
@@ -113,15 +110,14 @@
             border-radius: 35px;
             object-fit: contain;
           }
-
+          
           .service-card-text {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             align-items: flex-start;
-            width: 80%;
             height: 100%;
-            padding: 25px;
+            padding: 1%;
 
             .service-card-title {
               font-size: 24px; /* Adjust the font size as needed */
@@ -141,12 +137,11 @@
               display: flex;
               justify-content: flex-start;
               align-items: center;
-              gap: 10px;
+              
               font-weight: 200;
             }
 
             .service-card-description {
-              width: 105%;
               display: flex;
               justify-content: space-between;
               align-items: center;
@@ -178,7 +173,7 @@
       align-items: center;
       background-color: #063773;
       text-align: center;
-      height: 80px;
+      height: 10%;
     }
 
     .image {

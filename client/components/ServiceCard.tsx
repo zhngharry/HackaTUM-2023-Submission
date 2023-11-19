@@ -4,6 +4,7 @@ import React from "react";
 import { Card, Typography, Avatar } from "antd";
 import { CarOutlined, EnvironmentOutlined } from "@ant-design/icons";
 import Image from "next/image";
+import { useMediaQuery } from "react-responsive";
 
 const { Text } = Typography;
 
@@ -40,29 +41,31 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 }) => {
   const adjective = getAdjective(rankingScore * 10);
 
+  const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
+
   return (
-    <Card className="service-card" hoverable>
+    <Card className="service-card" hoverable style={{width: isMobile ? "90vw" : "70vw"}}>
       <div className="service-card">
-        <Image
+        {isMobile ? null : <Image
           className="service-image"
           src={`/craftsman_pictures/${imagePath}`}
           alt="Image"
-          width={150}
-          height={150}
-        />
-        <div className="service-card-text">
+          width={125}
+          height={125}
+        />}
+        <div className="service-card-text" style={{width : isMobile ? "" : "80%" }}>
           <div className="service-card-title">{name}</div>
           <div className="ranking-avatar-container">
             <Avatar
               shape="square"
               style={{
                 backgroundColor: rankingScore < 0.8 ? "#063773" : "#b39656",
-                width: "50px",
-                height: "50px",
+                width: isMobile ? "35px" : "50px",
+                height: isMobile ? "35px" :  "50px",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: "20px",
+                fontSize:  isMobile ? "16px" : "20px",
                 fontStyle: "bold",
               }}
             >
@@ -71,7 +74,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
             <div className="adjective-text">{adjective}</div>
           </div>
 
-          <div className="service-card-description">
+          <div className="service-card-description" style={{width: isMobile ? "75vw" : "60vw", gap: isMobile ? "2px" : "10px"}}>
             <div className="service-card-distance">
               <CarOutlined />
               {distance.toFixed(1)} km away
@@ -79,7 +82,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 
             <div className="service-card-city">
               <EnvironmentOutlined />
-              Located in {city}
+              {isMobile ? `${city}`  : `Located in ${city}`}
             </div>
           </div>
         </div>
