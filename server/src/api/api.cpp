@@ -41,13 +41,15 @@ void Api::define_get_craftsmen_endpoint()
             }
         }
 
-        auto ranking = m_db.get_precomputed_ranking(postalcode);
-
         constexpr std::size_t per_page { 20 };
+        auto ranking =
+            m_db.get_precomputed_ranking(postalcode, page * per_page, page * per_page + per_page);
+        // TODO filtering
+
         std::vector<crow::json::wvalue> res_list {};
-        for (std::size_t i { per_page * page }; i < ranking.size(); ++i) {
+        for (auto& rank : ranking) {
             res_list.push_back(
-                m_db.service_provider_ret_val(ranking.at(i).first, ranking.at(i).second));
+                m_db.service_provider_ret_val(rank.first, rank.second, postalcode));
         }
 
         res.code = crow::OK;
@@ -134,7 +136,7 @@ void Api::define_patch_craftsman_endpoint()
                     }
                 }
 
-                update_profileScores(profilePictureScore, profileDescriptionScore);
+                update_profileScores(id_str, profilePictureScore, profileDescriptionScore);
             }
 
             res.write(crow::json::wvalue {
@@ -151,11 +153,12 @@ void Api::define_patch_craftsman_endpoint()
 
 bool Api::update_maxDrivingDistance(std::string w_id, double maxDrivingDistance)
 {
-    // TODO
-    return true;
+
+    
 }
 
-bool Api::update_profileScores(double profilePictureScore, double profileDescriptionScore)
+bool Api::update_profileScores(
+    std::string w_id, double profilePictureScore, double profileDescriptionScore)
 {
     // TODO
     return true;
