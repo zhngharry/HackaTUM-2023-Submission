@@ -154,7 +154,7 @@ void Database::update_plz_rank(std::string& wid, std::string& plz, double score)
 }
 
 
-void Database::update_plz_rank_mass(std::string& plz, std::unordered_map<std::string, double> um){
+void Database::update_plz_rank_mass(const std::string& plz, std::unordered_map<std::string, double> um){
     std::string prefix = "rank_";
     m_redis.zadd(prefix+plz, um.begin(), um.end() );
 

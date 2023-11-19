@@ -12,7 +12,7 @@ constexpr double GRADOS_RADIANES { PI / 180 };
 namespace api::util {
 double calcGPSDistance(double latitud1, double longitud1, double latitud2, double longitud2);
 
-double calcMaxDistance(std::string& plz, double maxDistance);
+double calcMaxDistance(database::Database& db, std::string& plz, double maxDistance);
 void reachable_plzs(
     std::function<void(std::string, std::string, double, database::Database&)> f,
     database::Database& db,

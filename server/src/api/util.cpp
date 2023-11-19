@@ -44,7 +44,6 @@ void reachable_plzs(
     database::Database& db,
     std::string w_id)
 {
-    std::vector<std::string> result {};
     std::stack<std::string> s {};
     std::unordered_set<std::string> discovered {};
 
@@ -84,7 +83,7 @@ void reachable_plzs(
         double dist =
             calcGPSDistance(w_coords.first, w_coords.second, plz_coords.first, plz_coords.second);
         if (dist < calcMaxDistance(db, plz, w_maxDist)) {
-            // f(plz, w_id, dist, db);
+            f(plz, w_id, dist, db);
             um.insert(std::make_pair(plz, dist));
 
             for (auto& neighbour : db.get_neighbours(plz)) {
@@ -100,7 +99,7 @@ void reachable_plzs(
 
 void update_plz_wid(std::string plz, std::string w_id, double dist, database::Database& db)
 {
-    db.update_wid_reachable(w_id, plz, dist);
+    //db.update_wid_reachable(w_id, plz, dist);
 
     double pfp_score;
     if (auto opt = db.get_pfp_score(w_id)) {

@@ -53,7 +53,7 @@ public:
 
     void remove_wid_reachable(std::string& wid, std::string& plz);
 
-    void update_plz_rank_mass(std::string& plz, std::unordered_map<std::string, double> um);
+    void update_plz_rank_mass(const std::string& plz, std::unordered_map<std::string, double> um);
     
     void update_plz_rank(std::string& wid, std::string& plz, double score);
 
