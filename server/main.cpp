@@ -1,5 +1,10 @@
-#include "src/api/routes.h"
 
-int main() {
-    api::start_api();
+#include "src/database/db.h"
+#include <optional>
+#include <string>
+
+int main(void)
+{
+    database::Database d{};
+
 }

@@ -9,9 +9,17 @@ project('hackatum-backend', 'cpp',
 src_files = [ 'main.cpp' ]
 subdir('src')
 
+cmake = import('cmake')
+
+redis = cmake.subproject('redis-plus-plus')
+
+redis_dep = redis.dependency('redis++')
+
 dependencies = [
-  dependency('hiredis')
+  redis_dep
 ]
+
+
 
 target = executable(
   meson.project_name(),
