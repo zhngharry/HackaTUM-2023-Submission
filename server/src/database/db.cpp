@@ -135,7 +135,7 @@ void Database::update_wid_reachable(std::string& wid, std::string& plz, double d
     std::ostringstream strs;
     strs << dist;
     std::string prefix = "reachable_";
-    m_redis.zadd(wid, plz, dist);
+    m_redis.zadd(prefix+wid, plz, dist);
 }
 
 void Database::remove_wid_reachable(std::string& wid, std::string& plz){
@@ -147,7 +147,7 @@ void Database::update_plz_rank(std::string& wid, std::string& plz, double score)
     std::ostringstream strs;
     strs << score;
     std::string prefix = "rank_";
-    m_redis.zadd(plz, wid, score);
+    m_redis.zadd(prefix+plz, wid, score);
 }
 
 }

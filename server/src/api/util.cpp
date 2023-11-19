@@ -22,7 +22,7 @@ double calcGPSDistance(double latitud1, double longitud1, double latitud2, doubl
     temp = 2 * asin(std::min(1.0, sqrt(haversine)));
     distancia_puntos = RADIO_TERRESTRE * temp;
 
-    return distancia_puntos;
+    return distancia_puntos / 1000;
 }
 
 double calcMaxDistance(database::Database& db, std::string& plz, double maxDistance)
@@ -64,7 +64,7 @@ void reachable_plzs(
 
     double w_maxDist;
     if (auto opt = db.get_max_distance(w_id)) {
-        w_maxDist = opt.value();
+        w_maxDist = opt.value() / 1000;
     } else {
         return;
     }
@@ -79,11 +79,9 @@ void reachable_plzs(
         } else {
             continue;
         }
-
-        if (double dist =
-                calcGPSDistance(
-                    w_coords.first, w_coords.second, plz_coords.first, plz_coords.second) <
-                calcMaxDistance(plz, w_maxDist)) {
+        double dist =
+            calcGPSDistance(w_coords.first, w_coords.second, plz_coords.first, plz_coords.second);
+        if (dist < calcMaxDistance(db, plz, w_maxDist)) {
             f(plz, w_id, dist, db);
 
             for (auto& neighbour : db.get_neighbours(plz)) {
@@ -95,7 +93,6 @@ void reachable_plzs(
         }
     }
     return;
-}
 }
 
 void update_plz_wid(std::string plz, std::string w_id, double dist, database::Database& db)
@@ -123,4 +120,6 @@ void update_plz_wid(std::string plz, std::string w_id, double dist, database::Da
     double total_score = dist_weight * dist_score + (1 - dist_weight) * profile_score;
 
     db.update_plz_rank(w_id, plz, total_score);
+}
+
 }
