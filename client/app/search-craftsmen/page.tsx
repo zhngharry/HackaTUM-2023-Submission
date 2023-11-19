@@ -37,11 +37,17 @@ interface Craftsman {
   distance: number;
 }
 
+interface StepProps {
+  title: string;
+  status?: "wait" | "process" | "finish" | "error";
+  icon?: React.ReactNode;
+}
+
 const SearchPage = () => {
-  const [stepItems, setStepItems] = useState([
+  const [stepItems, setStepItems] = useState<StepProps[]>([
     {
       title: "Enter your postcode",
-      status: "in progress",
+      status: "process",
       icon: <EnvironmentOutlined />,
     },
     {
@@ -82,7 +88,7 @@ const SearchPage = () => {
       },
       {
         ...prevStepItems[1],
-        status: "in progress",
+        status: "process",
       },
       prevStepItems[2], // No change for the third step
     ]);
@@ -94,7 +100,7 @@ const SearchPage = () => {
     setStepItems((prevStepItems) => [
       {
         ...prevStepItems[0],
-        status: "in progress",
+        status: "process",
         icon: <EnvironmentOutlined />,
       },
       {

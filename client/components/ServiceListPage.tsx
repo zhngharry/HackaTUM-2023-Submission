@@ -244,9 +244,7 @@ const ServiceListPage: React.FC<ServiceListPageProps> = ({
             type="default"
             onClick={scrollToTop}
             style={{ height: "50px", width: "50px" }}
-          >
-            Scroll to Top
-          </FloatButton>
+          />
         </Tooltip>
       )}
     </Layout>
