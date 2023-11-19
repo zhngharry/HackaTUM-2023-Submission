@@ -2,7 +2,7 @@
 import axios from "axios";
 import { time } from "console";
 
-const API_BASE_URL = "http://localhost:8080";
+const API_BASE_URL = "http://localhost:3000";
 
 function wait(seconds: number) {
   return new Promise((resolve) => {
@@ -12,9 +12,9 @@ function wait(seconds: number) {
 
 export const getListOfCraftsmen = async (postcode: number, page:number) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/mock`, {
+    const response = await axios.get(`${API_BASE_URL}/craftsmen?`, {
       params: {
-        postcode: postcode,
+        postalcode: postcode,
         page: page,
       },
     });
