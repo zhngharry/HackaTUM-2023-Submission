@@ -3,7 +3,9 @@
 import React from "react";
 import { useState } from "react";
 import { Typography, Input, Space, Button, message } from "antd";
+import { EnvironmentOutlined, SearchOutlined } from "@ant-design/icons";
 import postcodes from "german-postal-codes";
+import { useMediaQuery } from "react-responsive";
 
 import "../styles/styles.scss";
 
@@ -14,6 +16,7 @@ interface PostCodePageProps {
 
 const PostCodePage: React.FC<PostCodePageProps> = ({ onSearch, postCode }) => {
   const [postcode, setPostcode] = useState(postCode);
+  const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
 
   const handlePostcodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (
@@ -26,35 +29,36 @@ const PostCodePage: React.FC<PostCodePageProps> = ({ onSearch, postCode }) => {
     }
   };
 
-  const handleSearchClick = () => {
-    onSearch(postcode);
+  const handleSearch = () => {
+    if (postcode.length !== 5 || !postcodes.includes(postcode)) {
+      message.error("Invalid postcode!");
+    } else {
+      onSearch(postcode);
+    }
+  };
+
+  const handleSearchEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
   };
 
   return (
     <div className="custom-view">
-      <Typography.Title level={1}>
-        Enter your Postcode
+      <Typography.Title level={isMobile ? 3 : 1}>
+        Find skilled and trusted professionals in your area.
       </Typography.Title>
-      <Space.Compact style={{ width: "70%" }}>
+      <Space.Compact style={{ width: isMobile ? "80%" : "50%" }}>
         <Input
-          size="large"
+          size={isMobile ? "middle" : "large"}
           placeholder="Postcode"
           value={postcode}
           onChange={handlePostcodeChange}
+          onPressEnter={handleSearchEnter}
+          prefix={<EnvironmentOutlined style={{ marginRight: 5 }} />}
         />
-        <Button
-          size="large"
-          type="primary"
-          onClick={(e) => {
-            if (postcode.length != 5 || !postcodes.includes(postcode)) {
-              console.log("invalid!");
-              message.error("Invalid postcode!");
-              e.stopPropagation();
-            } else {
-              handleSearchClick();
-            }
-          }}
-        >
+        <Button size={isMobile ? "middle" : "large"} type="primary" onClick={handleSearch}>
+          <SearchOutlined />
           Search
         </Button>
       </Space.Compact>

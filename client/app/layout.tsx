@@ -10,8 +10,6 @@ export const metadata = {
 };
 
 const RootLayout = ({ children }: React.PropsWithChildren) => {
-
-
   return (
     <html lang="en" className="root">
       <body className="body">
