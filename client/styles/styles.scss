@@ -36,6 +36,7 @@
       .steps {
         background-color: #f4f4f4;
         width: 70%;
+        
       }
     }
   }
@@ -92,7 +93,7 @@
           width: 1200px;
           height: 200px;
           display: flex;
-          justify-content: start;
+          justify-content: flex-start;
           align-items: center;
           border-radius: 20px;
 
@@ -120,7 +121,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            align-items: start;
+            align-items: flex-start;
             width: 80%;
             height: 100%;
             padding: 25px;
@@ -133,7 +134,7 @@
 
             .service-card-distance {
               display: flex;
-              justify-content: start;
+              justify-content: flex-start;
               align-items: center;
               gap: 10px;
               font-weight: 500;
@@ -141,7 +142,7 @@
 
             .service-card-city {
               display: flex;
-              justify-content: start;
+              justify-content: flex-start;
               align-items: center;
               gap: 10px;
               font-weight: 200;

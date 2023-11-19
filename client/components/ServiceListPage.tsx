@@ -91,7 +91,7 @@ const ServiceListPage: React.FC<ServiceListPageProps> = ({
           <LeftOutlined />
           Edit Postcode
         </Button>
-        <div className="list-title">Craftsmen in your area</div>
+        <div className="list-title">Professionals matching your Postcode</div>
         <Dropdown
           menu={{ items, onClick: handleMenuClick }}
           trigger={["click"]}
@@ -111,16 +111,19 @@ const ServiceListPage: React.FC<ServiceListPageProps> = ({
           style={{
             marginTop: "50px",
             display: "flex",
+            flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
             height: "100%",
             width: "300px",
+            gap: "30px",
           }}
         >
           <Spin
             size="large"
             indicator={<LoadingOutlined style={{ fontSize: 50 }} spin />}
           />
+          Loading results...
         </div>
       ) : (
         <Layout className="list-sublayout">

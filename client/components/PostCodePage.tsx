@@ -3,6 +3,7 @@
 import React from "react";
 import { useState } from "react";
 import { Typography, Input, Space, Button, message } from "antd";
+import { EnvironmentOutlined, SearchOutlined } from "@ant-design/icons";
 import postcodes from "german-postal-codes";
 
 import "../styles/styles.scss";
@@ -50,8 +51,10 @@ const PostCodePage: React.FC<PostCodePageProps> = ({ onSearch, postCode }) => {
           value={postcode}
           onChange={handlePostcodeChange}
           onPressEnter={handleSearchEnter}
+          prefix={<EnvironmentOutlined style={{ marginRight: 5 }} />}
         />
         <Button size="large" type="primary" onClick={handleSearch}>
+          <SearchOutlined />
           Search
         </Button>
       </Space.Compact>
