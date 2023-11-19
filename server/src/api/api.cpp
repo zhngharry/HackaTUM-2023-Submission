@@ -42,11 +42,12 @@ void Api::define_get_craftsmen_endpoint()
         }
 
         auto ranking = m_db.get_precomputed_ranking(postalcode);
+        // TODO filtering
 
         constexpr std::size_t per_page { 20 };
         std::vector<crow::json::wvalue> res_list {};
-        // TODO: fix for condition
-        for (std::size_t i { per_page * page }; i < ranking.size(); ++i) {
+        for (std::size_t i { per_page * page }, count { 0 }; i < ranking.size() && count < per_page;
+             ++i, ++count) {
             res_list.push_back(
                 m_db.service_provider_ret_val(ranking.at(i).first, ranking.at(i).second));
         }
