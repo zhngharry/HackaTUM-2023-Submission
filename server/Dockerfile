@@ -30,6 +30,6 @@ RUN rm -rf ./build
 RUN meson setup build
 RUN ninja -C build
 
-EXPOSE 8080
+EXPOSE 3000
 
 CMD ["./build/hackatum-backend"]
