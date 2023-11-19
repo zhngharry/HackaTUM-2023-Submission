@@ -62,7 +62,7 @@ std::set<std::pair<std::string, double>, comp> get_ranking(database::Database& d
             continue;
         }
 
-        std::vector<std::string> w_nearest {}; // TODO
+        std::vector<std::string> w_nearest = db.get_nearest_wi(current_plz);
 
         for (auto& w_id : w_nearest) {
             std::pair<double, double> w_coords;
