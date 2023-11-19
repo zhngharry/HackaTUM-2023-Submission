@@ -60,7 +60,7 @@ public:
 
 private:
     sw::redis::Redis m_redis;
-    static constexpr std::string provider_prefix{"provider_"};
+    std::string provider_prefix{"provider_"};
 };
 
 }

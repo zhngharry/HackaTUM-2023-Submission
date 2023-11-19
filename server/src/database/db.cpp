@@ -6,24 +6,6 @@
 #include <sw/redis++/redis.h>
 #include <utility>
 
-// helper function
-double convert_string_2_double(const std::string& input)
-{
-    std::istringstream iss(input);
-    // Set precision to maximum to preserve the exact representation
-    iss >> std::setprecision(std::numeric_limits<double>::max_digits10);
-
-    double result;
-    iss >> result;
-
-    if (iss.fail()) {
-        // Handle conversion failure
-        throw std::invalid_argument("Invalid input for conversion to double.");
-    }
-
-    return result;
-}
-
 namespace database {
 
 Database::Database()
@@ -63,7 +45,8 @@ std::optional<std::pair<double, double>> Database::get_lat_lon_provider(std::str
         return {};
     }
     return std::make_pair(
-        convert_string_2_double(vals[0].value()), convert_string_2_double(vals[1].value()));
+        std::strtod(vals[0].value().c_str(), nullptr),
+        std::strtod(vals[1].value().c_str(), nullptr));
 }
 
 std::optional<std::pair<double, double>> Database::get_lat_lon_plz(std::string& plz)
@@ -74,7 +57,8 @@ std::optional<std::pair<double, double>> Database::get_lat_lon_plz(std::string& 
         return {};
     }
     return std::make_pair(
-        convert_string_2_double(vals[0].value()), convert_string_2_double(vals[1].value()));
+        std::strtod(vals[0].value().c_str(), nullptr),
+        std::strtod(vals[1].value().c_str(), nullptr));
 }
 
 std::optional<double> Database::get_pfp_score(std::string& wid)
@@ -83,7 +67,7 @@ std::optional<double> Database::get_pfp_score(std::string& wid)
     if (!result.has_value()) {
         return {};
     }
-    return convert_string_2_double(result.value());
+    return std::strtod(result.value().c_str(), nullptr);
 }
 
 std::optional<double> Database::get_pfd_score(std::string& wid)
@@ -92,7 +76,7 @@ std::optional<double> Database::get_pfd_score(std::string& wid)
     if (!result.has_value()) {
         return {};
     }
-    return convert_string_2_double(result.value());
+    return std::strtod(result.value().c_str(), nullptr);
 }
 
 std::optional<double> Database::get_max_distance(std::string& wid)
@@ -101,7 +85,7 @@ std::optional<double> Database::get_max_distance(std::string& wid)
     if (!result.has_value()) {
         return {};
     }
-    return convert_string_2_double(result.value());
+    return std::strtod(result.value().c_str(), nullptr);
 }
 
 std::optional<std::string> Database::get_nearest_plz(std::string& wid)
@@ -135,7 +119,8 @@ void Database::update_wid_reachable(std::string& wid, std::string& plz, double d
     // TODO
 }
 
-void Database::remove_wid_reachable(std::string& wid, std::string& plz){
+void Database::remove_wid_reachable(std::string& wid, std::string& plz)
+{
     return;
 }
 
