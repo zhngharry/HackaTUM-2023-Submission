@@ -66,6 +66,7 @@ const ServiceListPage: React.FC<ServiceListPageProps> = ({
   const [sortType, setSortType] = useState<string>("0");
   const [loadMoreLoading, setLoadMoreLoading] = useState<boolean>(false);
   const [showButton, setShowButton] = useState<boolean>(false);
+  const [pageCounter, setPageCounter] = useState<number>(1);
 
   const items: MenuProps["items"] = [
     {
@@ -136,11 +137,12 @@ const ServiceListPage: React.FC<ServiceListPageProps> = ({
   const handleLoadMore = () => {
     setLoadMoreLoading(true);
     console.log("load more");
-    getListOfCraftsmen(parseInt(postCode)).then((response) => {
-      setCraftsmen([...craftsmen, ...response]);
+    getListOfCraftsmen(parseInt(postCode), pageCounter).then((response) => {
+      setCraftsmen(craftsmen.concat(response));
       setLoadMoreLoading(false);
     });
     handleSort(sortType);
+    setPageCounter(pageCounter + 1);
   };
 
   const handleMenuClick: MenuProps["onClick"] = (e) => {
@@ -158,7 +160,10 @@ const ServiceListPage: React.FC<ServiceListPageProps> = ({
 
   return (
     <Layout className="list-layout">
-      <Header className="list-header" style={{width: isMobile ? "100vw" : "70vw"}}>
+      <Header
+        className="list-header"
+        style={{ width: isMobile ? "100vw" : "70vw" }}
+      >
         <Button
           size={isMobile ? "small" : "middle"}
           type="primary"

@@ -76,7 +76,7 @@ const SearchPage = () => {
 
   const handleSearch = (postcode: string) => {
     setLoading(true);
-    getListOfCraftsmen(parseInt(selectedPostCode)).then((response) => {
+    getListOfCraftsmen(parseInt(selectedPostCode), 0).then((response) => {
       setCraftsmen(response);
       setLoading(false);
     });

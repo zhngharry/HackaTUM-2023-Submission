@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Modal, Button, Typography } from "antd";
+import { Modal, Button, Typography, message } from "antd";
 import TextInputComponent from "./TextInputComponent";
 import { useMediaQuery } from "react-responsive";
+import { patchUser } from "../services/craftsmenAPI";
 
 const { Text } = Typography;
 
@@ -15,24 +16,33 @@ function EditWorkerModal(props: EditWorkerProps) {
   const { open, setOpen } = props;
   const [maxDrivingDistance, setMaxDrivingDistance] = useState<string>("");
   const [profilePictureScore, setProfilePictureScore] = useState<string>("");
-  const [profileDescriptionScore, setProfileDescriptionScore] = useState<string>("");
+  const [profileDescriptionScore, setProfileDescriptionScore] =
+    useState<string>("");
   const [craftsmanID, setCraftsmanID] = useState<string>("");
   const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
 
   return (
     <Modal
-      visible={open}
+      open={open}
       title={isMobile ? "Update Craftsman" : "Update Craftsman Profile"}
       centered
       width={isMobile ? "90vw" : "30vw"}
       onCancel={() => {
         setOpen(false);
+        setMaxDrivingDistance("");
+        setProfilePictureScore("");
+        setProfileDescriptionScore("");
+        setCraftsmanID("");
       }}
       footer={[
         <Button
           key="cancel"
           onClick={() => {
             setOpen(false);
+            setMaxDrivingDistance("");
+            setProfilePictureScore("");
+            setProfileDescriptionScore("");
+            setCraftsmanID("");
           }}
         >
           Cancel
@@ -40,7 +50,28 @@ function EditWorkerModal(props: EditWorkerProps) {
         <Button
           key="update"
           type="primary"
-          onClick={() => {}}
+          onClick={() => {
+            patchUser(parseInt(craftsmanID), {
+              maxDrivingDistance:
+                maxDrivingDistance === ""
+                  ? undefined
+                  : parseInt(maxDrivingDistance),
+              profilePictureScore:
+                profilePictureScore === ""
+                  ? undefined
+                  : parseInt(profilePictureScore),
+              profileDescriptionScore:
+                profileDescriptionScore === ""
+                  ? undefined
+                  : parseInt(profileDescriptionScore),
+            });
+            setOpen(false);
+            setMaxDrivingDistance("");
+            setProfilePictureScore("");
+            setProfileDescriptionScore("");
+            setCraftsmanID("");
+            message.success("Craftsman profile updated!");
+          }}
           disabled={
             craftsmanID === "" ||
             (maxDrivingDistance === "" &&
