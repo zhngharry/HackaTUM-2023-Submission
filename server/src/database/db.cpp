@@ -66,7 +66,15 @@ std::optional<std::pair<double, double>> Database::get_lat_lon_provider(std::str
     return std::make_pair(convert_string_2_double(vals[0].value()), convert_string_2_double(vals[1].value()));
 }
 
-std::optional<std::pair<double, double>> Database::get_lat_lon_plz(std::string& plz){}
+std::optional<std::pair<double, double>> Database::get_lat_lon_plz(std::string& plz){
+    std::vector<std::optional<std::string>> vals;
+    m_redis.hmget(plz.append("_coord"), { "lat", "lon" }, std::back_inserter(vals));
+    if (!vals[0].has_value() || !vals[1].has_value()) {
+        return {};
+    }
+    return std::make_pair(convert_string_2_double(vals[0].value()), convert_string_2_double(vals[1].value()));
+
+}
 
 
 std::optional<double> Database::get_pfp_score(std::string& wid)
