@@ -153,8 +153,8 @@ void Api::define_patch_craftsman_endpoint()
 
 bool Api::update_maxDrivingDistance(std::string w_id, double maxDrivingDistance)
 {
-    // TODO
-    return true;
+
+    
 }
 
 bool Api::update_profileScores(

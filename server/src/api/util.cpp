@@ -22,7 +22,7 @@ double calcGPSDistance(double latitud1, double longitud1, double latitud2, doubl
     temp = 2 * asin(std::min(1.0, sqrt(haversine)));
     distancia_puntos = RADIO_TERRESTRE * temp;
 
-    return distancia_puntos;
+    return distancia_puntos / 1000;
 }
 
 double calcMaxDistance(database::Database& db, std::string& plz, double maxDistance)
@@ -44,9 +44,10 @@ void reachable_plzs(
     database::Database& db,
     std::string w_id)
 {
-    std::vector<std::string> result {};
     std::stack<std::string> s {};
     std::unordered_set<std::string> discovered {};
+
+    std::unordered_map<std::string, double> um{};
 
     if (auto opt = db.get_nearest_plz(w_id)) {
         s.push(opt.value());
@@ -64,7 +65,7 @@ void reachable_plzs(
 
     double w_maxDist;
     if (auto opt = db.get_max_distance(w_id)) {
-        w_maxDist = opt.value();
+        w_maxDist = opt.value() / 1000;
     } else {
         return;
     }
@@ -79,12 +80,12 @@ void reachable_plzs(
         } else {
             continue;
         }
+        double dist =
+            calcGPSDistance(w_coords.first, w_coords.second, plz_coords.first, plz_coords.second);
+        if (dist < calcMaxDistance(db, plz, w_maxDist)) {
 
-        if (double dist =
-                calcGPSDistance(
-                    w_coords.first, w_coords.second, plz_coords.first, plz_coords.second) <
-                calcMaxDistance(db, plz, w_maxDist)) {
             f(plz, w_id, dist, db);
+            um.insert(std::make_pair(plz, dist));
 
             for (auto& neighbour : db.get_neighbours(plz)) {
                 if (!discovered.contains(neighbour)) {
@@ -96,11 +97,10 @@ void reachable_plzs(
     }
     return;
 }
-}
 
 void update_plz_wid(std::string plz, std::string w_id, double dist, database::Database& db)
 {
-    db.update_wid_reachable(w_id, plz, dist);
+    //db.update_wid_reachable(w_id, plz, dist);
 
     double pfp_score;
     if (auto opt = db.get_pfp_score(w_id)) {
@@ -123,4 +123,6 @@ void update_plz_wid(std::string plz, std::string w_id, double dist, database::Da
     double total_score = dist_weight * dist_score + (1 - dist_weight) * profile_score;
 
     db.update_plz_rank(w_id, plz, total_score);
+}
+
 }

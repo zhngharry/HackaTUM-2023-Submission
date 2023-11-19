@@ -143,17 +143,32 @@ void Database::set_max_distance(std::string& wid, size_t max_distance)
 
 void Database::update_wid_reachable(std::string& wid, std::string& plz, double dist)
 {
-    // TODO
+    std::string prefix = "reachable_";
+    m_redis.zadd(prefix+wid, plz, dist);
 }
 
-void Database::remove_wid_reachable(std::string& wid, std::string& plz)
+void Database::update_wid_reachable_mass(std::string& wid, std::unordered_map<std::string, double> um)
 {
+    std::string prefix = "reachable_";
+    m_redis.zadd(prefix+wid, um.begin(), um.end());
+}
+
+
+void Database::remove_wid_reachable(std::string& wid, std::string& plz){
     return;
 }
 
 void Database::update_plz_rank(std::string& wid, std::string& plz, double score)
 {
-    // TODO
+    std::string prefix = "rank_";
+    m_redis.zadd(prefix+plz, wid, score);
+}
+
+
+void Database::update_plz_rank_mass(const std::string& plz, std::unordered_map<std::string, double> um){
+    std::string prefix = "rank_";
+    m_redis.zadd(prefix+plz, um.begin(), um.end() );
+
 }
 
 }
