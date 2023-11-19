@@ -25,6 +25,8 @@ RUN apt-get install -f
 
 COPY . .
 
+RUN rm -rf ./build
+
 RUN meson setup build
 RUN ninja -C build
 
