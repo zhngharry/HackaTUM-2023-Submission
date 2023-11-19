@@ -1,10 +1,6 @@
-
-#include "src/database/db.h"
-#include <optional>
-#include <string>
+#include "src/api/api.h"
 
 int main(void)
 {
-    database::Database d{};
-
+    api::Api {};
 }

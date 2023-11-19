@@ -83,7 +83,7 @@ void reachable_plzs(
         if (double dist =
                 calcGPSDistance(
                     w_coords.first, w_coords.second, plz_coords.first, plz_coords.second) <
-                calcMaxDistance(plz, w_maxDist)) {
+                calcMaxDistance(db, plz, w_maxDist)) {
             f(plz, w_id, dist, db);
 
             for (auto& neighbour : db.get_neighbours(plz)) {
