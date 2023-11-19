@@ -10,7 +10,7 @@ Api::Api()
 {
     define_get_craftsmen_endpoint();
     define_patch_craftsman_endpoint();
-    app.port(8080).multithreaded().run();
+    app.port(3000).multithreaded().run();
 }
 
 void Api::define_get_craftsmen_endpoint()
