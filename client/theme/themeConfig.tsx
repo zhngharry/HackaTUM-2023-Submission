@@ -5,7 +5,7 @@ const theme: ThemeConfig = {
   token: {
     fontSize: 16,
     colorPrimary: '#063773',
-    fontFamily: 'arial',
+    fontFamily: 'Roboto, Helvetica, sans-serif',
   },
 };
 

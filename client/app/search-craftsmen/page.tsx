@@ -2,20 +2,39 @@
 
 import React from "react";
 import { useState } from "react";
-import { Layout, ConfigProvider, FloatButton, Steps } from "antd";
+import {
+  Layout,
+  ConfigProvider,
+  FloatButton,
+  Steps,
+  message,
+  Spin,
+} from "antd";
 import theme from "../../theme/themeConfig";
 import {
   EnvironmentOutlined,
   SolutionOutlined,
   CheckCircleOutlined,
   EditOutlined,
+  LoadingOutlined,
 } from "@ant-design/icons";
 import "../../styles/styles.scss";
 import UpdateModal from "../../components/UpdateModal";
 import PostCodePage from "../../components/PostCodePage";
 import ServiceListPage from "../../components/ServiceListPage";
+import { getListOfCraftsmen } from "../../services/craftsmenAPI";
 
 const { Content, Header } = Layout;
+
+interface Craftsman {
+  id: number;
+  name: string;
+  city: string;
+  street: string;
+  houseNumber: string;
+  rankingScore: number;
+  distance: number;
+}
 
 const SearchPage = () => {
   const [stepItems, setStepItems] = useState([
@@ -38,18 +57,20 @@ const SearchPage = () => {
 
   const [currentStep, setCurrentStep] = useState(0);
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [selectedPostCode, setSelectedPostCode] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [craftsmen, setCraftsmen] = useState<Craftsman[]>([]);
 
   const showUpdateModal = () => {
     setUpdateModalVisible(true);
   };
 
-  const hideUpdateModal = () => {
-    setUpdateModalVisible(false);
-  };
-
   const handleSearch = (postcode: string) => {
+    setLoading(true);
+    getListOfCraftsmen(parseInt(selectedPostCode)).then((response) => {
+      setCraftsmen(response);
+      setLoading(false);
+    });
     setCurrentStep(1);
     setStepItems((prevStepItems) => [
       {
@@ -108,6 +129,9 @@ const SearchPage = () => {
               <ServiceListPage
                 stepBack={() => handleBackClick(selectedPostCode)}
                 postCode={selectedPostCode}
+                craftsmen={craftsmen}
+                loading={loading}
+                setLoading={setLoading}
               />
             ) : null}
           </Content>

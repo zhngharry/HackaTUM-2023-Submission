@@ -24,7 +24,7 @@ function EditWorkerModal(props: EditWorkerProps) {
       open={open}
       title="Update Craftsman Profile"
       centered
-      width="60vw"
+      width="30vw"
       onCancel={() => {
         setOpen(false);
       }}
@@ -38,13 +38,14 @@ function EditWorkerModal(props: EditWorkerProps) {
           Cancel
         </Button>,
         <Button
+          style={{ fontWeight: "bold"}}
           key="create"
           type="primary"
           onClick={() => {}}
           disabled={
-            craftsmanID === "" &&
-            (maxDrivingDistance === "" ||
-              profilePictureScore === "" ||
+            craftsmanID === "" ||
+            (maxDrivingDistance === "" &&
+              profilePictureScore === "" &&
               profileDescriptionScore === "")
           }
         >

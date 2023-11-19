@@ -26,34 +26,32 @@ const PostCodePage: React.FC<PostCodePageProps> = ({ onSearch, postCode }) => {
     }
   };
 
-  const handleSearchClick = () => {
-    onSearch(postcode);
+  const handleSearch = () => {
+    if (postcode.length !== 5 || !postcodes.includes(postcode)) {
+      message.error("Invalid postcode!");
+    } else {
+      onSearch(postcode);
+    }
+  };
+
+  const handleSearchEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
   };
 
   return (
     <div className="custom-view">
-      <Typography.Title level={1}>
-        Enter your Postcode
-      </Typography.Title>
+      <Typography.Title level={1}>Enter your Postcode</Typography.Title>
       <Space.Compact style={{ width: "70%" }}>
         <Input
           size="large"
           placeholder="Postcode"
           value={postcode}
           onChange={handlePostcodeChange}
+          onPressEnter={handleSearchEnter}
         />
-        <Button
-          size="large"
-          type="primary"
-          onClick={(e) => {
-            if (postcode.length != 5 || !postcodes.includes(postcode)) {
-              message.error("Invalid postcode!");
-              e.stopPropagation();
-            } else {
-              handleSearchClick();
-            }
-          }}
-        >
+        <Button size="large" type="primary" onClick={handleSearch}>
           Search
         </Button>
       </Space.Compact>

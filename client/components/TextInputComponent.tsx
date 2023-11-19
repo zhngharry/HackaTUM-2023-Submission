@@ -1,5 +1,5 @@
-import React from 'react';
-import { Input, Typography } from 'antd';
+import React from "react";
+import { Input, Typography } from "antd";
 
 const { Title } = Typography;
 
@@ -21,11 +21,11 @@ function TextInputComponent({
       <Title level={5}>{title}</Title>
       <Input
         style={{
-          resize: 'none',
+          resize: "none",
         }}
         allowClear
         disabled={false}
-        onChange={event => onChange(event)}
+        onChange={(event) => onChange(event)}
         value={value}
         placeholder={placeholder}
       />

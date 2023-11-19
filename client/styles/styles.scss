@@ -25,17 +25,16 @@
 
     .page-header {
       text-align: center;
-      background-color: white;
+      background-color: #f4f4f4;
       color: white;
-      padding: 0;
+      padding-top: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-top: 20px;
-      margin-bottom: 20px;
+      padding-bottom: 20px;
 
       .steps {
-        background-color: white;
+        background-color: #f4f4f4;
         width: 70%;
       }
     }
@@ -58,23 +57,113 @@
     justify-content: space-between;
     align-items: center;
     justify-items: center;
+    align-content: center;
+    margin-top: 1%;
+
+    .list-title {
+      font-size: 30px;
+      font-weight: bold;
+      color: #063773;
+    }
+
   }
 
   .list-sublayout {
     margin-top: 2%;
-    width: 70%;
+    width: 65%;
     display: flex;
     justify-content: space-between;
     background-color: white;
 
-    .list-sider {
-      border-radius: 10px;
-      background-color: #65abe6;
-      min-height: 300px;
-      height: 20%;
-    }
+    .list-content {
+      width: 100%;
+      justify-content: center;
+      align-items: center;
 
+      .list-content-space {
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+
+        .service-card {
+          background-color: #f4f4f4;
+          width: 1200px;
+          height: 200px;
+          display: flex;
+          justify-content: start;
+          align-items: center;
+          border-radius: 20px;
+
+          .ranking-avatar-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+          }
+
+          .adjective-text {
+            font-size: 20px; 
+            font-weight: bold;
+            color: #063773;
+          }
+
+         
+          .service-image {
+            margin-left: 0;
+            margin-right: 10px;
+            border-radius: 35px;
+            object-fit: contain;
+          }
+
+          .service-card-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: start;
+            width: 80%;
+            height: 100%;
+            padding: 25px;
+
+            .service-card-title {
+              font-size: 24px; /* Adjust the font size as needed */
+              font-weight: bold;
+              color: #063773;
+            }
+
+            .service-card-distance {
+              display: flex;
+              justify-content: start;
+              align-items: center;
+              gap: 10px;
+              font-weight: 500;
+            }
+
+            .service-card-city {
+              display: flex;
+              justify-content: start;
+              align-items: center;
+              gap: 10px;
+              font-weight: 200;
+            }
+
+            .service-card-description {
+              width: 105%;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+
+            }
+          }
+        }
+      }
+    }
   }
+}
+
+.sort-dropdown {
+  margin-top: 10px;
+  font-weight: bold;
 }
 
 .root {
@@ -99,4 +188,17 @@
       padding: 20px;
     }
   }
+}
+
+.load-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 300px;
+  height: 50px;
+  background-color: #063773;
+  color: white;
+  border-radius: 20px;
+  margin-top: 10px;
+  margin-bottom: 50px;
 }
