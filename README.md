@@ -3,6 +3,10 @@ This repository contains the code of [our submission](https://devpost.com/softwa
 
 Details on the challenge can be found [here](https://github.com/check24-profis/hackatum-2023).
 
+A preview of our frontend:
+
+![Preview of Search View](.github/screenshots/SearchView.png)
+
 ### Run it yourself
 You can run this project using Docker Compose:
 
