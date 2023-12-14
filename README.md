@@ -1,4 +1,4 @@
-# HackaTUM2023
+# HackaTUM2023 - Optimized-Geo-Weighted-Search
 This repository contains the code of [our submission](https://devpost.com/software/check24-craftman-ranking) for the Check24 challenge at [hackaTUM 2023](https://hack.tum.de).
 
 Details on the challenge can be found [here](https://github.com/check24-profis/hackatum-2023).
